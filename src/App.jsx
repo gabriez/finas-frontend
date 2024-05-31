@@ -1,19 +1,5 @@
 import { useState } from 'react'
-
-let ventas = [
-  {
-    precio: 5,
-    nombre: 'silla 1'
-  },
-  {
-    precio: 5,
-    nombre: 'silla 2'
-  },
-  {
-    precio: 5,
-    nombre: 'silla 3'
-  }
-]
+import Login from './pages/Login';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -28,9 +14,7 @@ function App() {
     <>
       <p>Cuenta: {count} </p>
       <button onClick={handleClick}> cuenta </button>
-      {
-        
-      }
+      <Login />
     </>
   )
 }
