@@ -5,6 +5,15 @@ import Login from '../pages/public/Login'
 import Register from '../pages/public/Register';
 import Confirm from '../pages/public/Confirm';
 
+const routes = {
+    PUBLIC: {
+        INDEX: '/',
+        REGISTER: '/register',
+        CONFIRM: '/confirmacion',
+        FORGOT: '/forgot-password'
+    }
+}
+
 const router = createBrowserRouter([
     {
         path: '/',
@@ -27,3 +36,6 @@ const router = createBrowserRouter([
 ])
 
 export default router;
+export {
+    routes
+};

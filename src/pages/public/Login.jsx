@@ -1,6 +1,8 @@
 import { useState } from "react"
+import { Link } from "react-router-dom";
 
 import InputText from "../../components/Forms/InputText"
+import { routes } from "../../routes/Routes";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -20,20 +22,24 @@ const Login = () => {
   }
 
   return (
-    <form className="flex-col">
-        <div  className="pb-2">
-            <InputText type="email" name="email" placeholder="email" 
-              handleChange={handleChange} value={formData.email}
-            />
-        </div>
-        <div className="pb-5">
-            {/* <label htmlFor="password" className="text-"></label> */}
-            <InputText type="password" name="password" placeholder="Contraseña"
-              handleChange={handleChange} value={formData.password}
-            />
-        </div>
-        <button type="submit" className=" py-5 px-20 rounded-full bg-[#5DF153] font-bold text-[#333] w-[100%] box-shadow-md">Iniciar Sesion</button>
-    </form>
+    <>
+      <form className="flex-col">
+          <div  className="pb-2">
+              <InputText type="email" name="email" placeholder="email" 
+                handleChange={handleChange} value={formData.email}
+              />
+          </div>
+          <div className="pb-5">
+              {/* <label htmlFor="password" className="text-"></label> */}
+              <InputText type="password" name="password" placeholder="Contraseña"
+                handleChange={handleChange} value={formData.password}
+              />
+          </div>
+          <ButtonSubmit text="Iniciar Sesion" />
+      </form>
+      <button className="text-white pt-8 w-[100%]"><Link href="#" to={routes.PUBLIC.FORGOT} className="text-xl">Has olvidado tu contraseña?</Link></button>
+      <button className="text-white w-[100%]"><Link href="#" to={routes.PUBLIC.REGISTER} className="text-xl">Registrarse</Link></button>
+    </>
   )
 }
 

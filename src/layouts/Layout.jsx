@@ -17,8 +17,7 @@ const Layout = () => {
         <h1 className="text-6xl font-bold text-white pb-1">Hola de nuevo!</h1>
         <h2 className="text-3xl text-left text-white pb-5 font-medium">Bienvenido de vuelta.</h2>
         <Outlet/>
-        <button className="text-white pt-8 w-[100%]"><a href="#" className="text-xl">Has olvidado tu contrasena?</a></button>
-        <button className="text-white w-[100%]"><a href="#" className="text-xl">Registrarse</a></button>
+
       </div>
     </div>
     </main>
