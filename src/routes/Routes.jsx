@@ -14,6 +14,9 @@ const routes = {
 		CONFIRM: "/confirmacion",
 		FORGOT: "/forgot-password",
 	},
+    PRIVATE: {
+        INDEX: "/home"
+    }
 };
 
 const router = createBrowserRouter([
@@ -36,7 +39,7 @@ const router = createBrowserRouter([
 		],
 	},
 	{
-		path: "/dashboard",
+		path: "/home",
 		element: <PrivateLayout />,
 		children: [{ index: true, element: <Home /> }],
 	},
