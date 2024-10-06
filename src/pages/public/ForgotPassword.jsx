@@ -4,7 +4,7 @@ import InputText from "../../components/Forms/InputText";
 import { routes } from "../../routes/Routes";
 import ButtonSubmit from "../../components/Forms/ButtonSubmit";
 
-const Register = () => {
+const ForgotPassword = () => {
   const [formData, setFormData] = useState({
     text: "",
     email: "",
@@ -27,15 +27,6 @@ const Register = () => {
       <form className="flex-col">
         <div className="pb-2">
           <InputText
-            type="text"
-            name="Nombre"
-            placeholder="Nombre y Apellido"
-            handleChange={handleChange}
-            value={formData.text}
-          />
-        </div>
-        <div className="pb-2">
-          <InputText
             type="email"
             name="email"
             placeholder="Email"
@@ -43,20 +34,10 @@ const Register = () => {
             value={formData.email}
           />
         </div>
-        <div className="pb-5">
-          {/* <label htmlFor="password" className="text-"></label> */}
-          <InputText
-            type="password"
-            name="password"
-            placeholder="Contraseña"
-            handleChange={handleChange}
-            value={formData.password}
-          />
-        </div>
-        <ButtonSubmit text="Registrarse" />
+        <ButtonSubmit text="Restablecer" />
       </form>
     </>
   );
 };
 
-export default Register;
+export default ForgotPassword;
