@@ -6,8 +6,9 @@ import Register from "../pages/public/Register";
 import Confirm from "../pages/public/Confirm";
 import PrivateLayout from "../layouts/PrivateLayout";
 import Home from "../pages/private/Home";
+import ForgotPassword from "../pages/public/ForgotPassword";
 
-const routes = {
+const ROUTES = {
 	PUBLIC: {
 		INDEX: "/",
 		REGISTER: "/register",
@@ -36,14 +37,20 @@ const router = createBrowserRouter([
 				path: "/confirmacion",
 				element: <Confirm />,
 			},
+			{
+				path: ROUTES.PUBLIC.FORGOT,
+				element: <ForgotPassword />,
+			},
 		],
 	},
 	{
 		path: "/home",
 		element: <PrivateLayout />,
-		children: [{ index: true, element: <Home /> }],
+		children: [{ index: true, element: <Home /> }, {
+            path: '/home/example'
+        }],
 	},
 ]);
 
 export default router;
-export { routes };
+export { ROUTES };

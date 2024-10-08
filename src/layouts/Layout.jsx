@@ -1,9 +1,11 @@
 import { Outlet, useLocation } from "react-router-dom";
 import imagenPrueba from "../assets/imagenPrueba.png";
 import logoFinas from "../assets/logo-finas.png";
+import { ROUTES } from "../routes/Routes";
 
 const Layout = () => {
   const location = useLocation();
+  let arr = [1 ,2,3 ]
   const path = location.pathname;
   return (
     // className="bg-[url('./imagenPrueba.jpg')] h-screen bg-cover w-[70%]"
@@ -24,12 +26,12 @@ const Layout = () => {
           />
           <h1 className="text-6xl font-bold text-white pb-1">Hola de nuevo!</h1>
           <h2 className="text-3xl text-left text-white pb-5 font-medium">
-            {path === "/"
+            {path === ROUTES.PUBLIC.INDEX
               ? "Bienvenido de vuelta"
-              : path === "/register"
+              : path === ROUTES.PUBLIC.REGISTER
               ? "Registrate para empezar"
-              : path === "/forgot-password"
-              ? "la contrasena"
+              : path === ROUTES.PUBLIC.FORGOT
+              ? "La contraseña"
               : ""}
           </h2>
           <Outlet />

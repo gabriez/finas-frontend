@@ -2,18 +2,20 @@ import { useState } from "react"
 import { Link } from "react-router-dom";
 
 import InputText from "../../components/Forms/InputText"
-import { routes } from "../../routes/Routes";
+import { ROUTES } from "../../routes/Routes";
 import ButtonSubmit from "../../components/Forms/ButtonSubmit";
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: ""  
-  });
+  }); 
 
   const handleChange = e => {
     const { name, value } = e.target;
     setFormData((prevState) => {
+      console.log("nombre del input o key", name, "estado previo", prevState, "estado after", { ...prevState, [name]: value})
+
       return { ...prevState, [name]: value}
     })
   }
@@ -38,8 +40,8 @@ const Login = () => {
           </div>
           <ButtonSubmit text="Iniciar Sesion" />
       </form>
-      <button className="text-white pt-8 w-[100%]"><Link href="#" to={routes.PUBLIC.FORGOT} className="text-xl">Has olvidado tu contraseña?</Link></button>
-      <button className="text-white w-[100%]"><Link href="#" to={routes.PUBLIC.REGISTER} className="text-xl">Registrarse</Link></button>
+      <button className="text-white pt-8 w-[100%]"><Link href="#" to={ROUTES.PUBLIC.FORGOT} className="text-xl">Has olvidado tu contraseña?</Link></button>
+      <button className="text-white w-[100%]"><Link href="#" to={ROUTES.PUBLIC.REGISTER} className="text-xl">Registrarse</Link></button>
     </>
   )
 }
