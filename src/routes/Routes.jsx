@@ -7,6 +7,7 @@ import Confirm from "../pages/public/Confirm";
 import PrivateLayout from "../layouts/PrivateLayout";
 import Home from "../pages/private/Home";
 import ForgotPassword from "../pages/public/ForgotPassword";
+import Usuarios from "../pages/private/Usuarios"; 
 
 const ROUTES = {
 	PUBLIC: {
@@ -46,9 +47,11 @@ const router = createBrowserRouter([
 	{
 		path: "/home",
 		element: <PrivateLayout />,
-		children: [{ index: true, element: <Home /> }, {
-            path: '/home/example'
-        }],
+		children: [{ index: true, element: <Home /> },
+		{
+			path: "/home/users",
+			element: <Usuarios/>
+		}],
 	},
 ]);
 
