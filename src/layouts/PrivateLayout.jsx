@@ -1,12 +1,13 @@
-import { Outlet } from "react-router-dom"
+import { Outlet } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 const PrivateLayout = () => {
   return (
     <div>
-        <Outlet/>
-
+      <Navbar />
+      <Outlet />
     </div>
-  )
-}
+  );
+};
 
-export default PrivateLayout
+export default PrivateLayout;
