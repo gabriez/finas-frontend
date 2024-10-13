@@ -1,44 +1,86 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 import imagenPrueba from "../assets/imagenPrueba.png";
 import logoFinas from "../assets/logo-finas.png";
 import { ROUTES } from "../routes/Routes";
+import AuthProvider, { useAuth } from "../context/AuthProvider";
+import PrivateLayout from "./PrivateLayout";
+import PublicLayout from "./PublicLayout";
+import { LOCAL_STORAGE_KEYS } from "../constants";
+import { jwtDecode } from "jwt-decode";
+import { useEffect } from "react";
 
 const Layout = () => {
-  const location = useLocation();
-  let arr = [1 ,2,3 ]
-  const path = location.pathname;
-  return (
-    // className="bg-[url('./imagenPrueba.jpg')] h-screen bg-cover w-[70%]"
-    <main className="flex">
-      <div className="w-[70%]">
-        <img
-          src={imagenPrueba}
-          alt="imagen de construccion"
-          className="h-screen bg-cover w-[100%] backdrop-brightness-50"
-        />
-      </div>
-      <div className="w-[30%] flex justify-center items-center bg-[#053A0A] flex-col shadow-inner">
-        <div className="flex-col justify-center items-center">
-          <img
-            src={logoFinas}
-            alt="logo de finas"
-            className="w-[60%] pb-5 mx-auto"
-          />
-          <h1 className="text-6xl font-bold text-white pb-1">Hola de nuevo!</h1>
-          <h2 className="text-3xl text-left text-white pb-5 font-medium">
-            {path === ROUTES.PUBLIC.INDEX
-              ? "Bienvenido de vuelta"
-              : path === ROUTES.PUBLIC.REGISTER
-              ? "Registrate para empezar"
-              : path === ROUTES.PUBLIC.FORGOT
-              ? "La contraseña"
-              : ""}
-          </h2>
-          <Outlet />
-        </div>
-      </div>
-    </main>
-  );
+	const location = useLocation();
+	const path = location.pathname;
+	const navigate = useNavigate();
+	const { userData, setUserData } = useAuth();
+
+	const checkTime = (endTime) => {
+		return endTime > new Date().valueOf() / 1000;
+	};
+
+	const redirectHome = () => {
+		return (
+			!path.includes(ROUTES.PRIVATE.INDEX) && navigate(ROUTES.PRIVATE.INDEX)
+		);
+	};
+
+	useEffect(() => {
+		let session = sessionStorage.getItem(LOCAL_STORAGE_KEYS.accessToken);
+		if (!session) {
+			sessionStorage.removeItem(LOCAL_STORAGE_KEYS.accessToken);
+			toast.error("Debes iniciar sesión nuevamente");
+			setUserData({
+				username: "",
+				email: "",
+				rol: "",
+				endTime: "",
+			});
+			navigate(ROUTES.PUBLIC.INDEX);
+		}
+
+		if (userData.endTime && userData.rol && userData.email) {
+			if (!checkTime(userData.endTime)) {
+				navigate(ROUTES.PUBLIC.INDEX);
+				setUserData({
+					username: "",
+					email: "",
+					rol: "",
+					endTime: "",
+				});
+				sessionStorage.removeItem(LOCAL_STORAGE_KEYS.accessToken);
+				toast.error("Debes iniciar sesión nuevamente");
+			} else {
+				redirectHome();
+			}
+		} else if (session) {
+			let jtw = jwtDecode(session);
+			if (checkTime(jtw.exp)) {
+				setUserData({
+					username: jtw.username,
+					email: jtw.email,
+					rol: jtw.rol,
+					endTime: jtw.exp,
+				});
+				redirectHome();
+			} else {
+				navigate(ROUTES.PUBLIC.INDEX);
+				sessionStorage.removeItem(LOCAL_STORAGE_KEYS.accessToken);
+				toast.error("Debes iniciar sesión nuevamente");
+			}
+		} else {
+			navigate(ROUTES.PUBLIC.INDEX);
+			toast.error("Debes iniciar sesión");
+		}
+	}, [path]);
+
+	return (
+		<>
+			{path.includes("home") ? <PrivateLayout /> : <PublicLayout />}
+			<Toaster />
+		</>
+	);
 };
 
 export default Layout;

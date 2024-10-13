@@ -7,6 +7,7 @@ import Confirm from "../pages/public/Confirm";
 import PrivateLayout from "../layouts/PrivateLayout";
 import Home from "../pages/private/Home";
 import ForgotPassword from "../pages/public/ForgotPassword";
+import AuthProvider from "../context/AuthProvider";
 
 const ROUTES = {
 	PUBLIC: {
@@ -23,7 +24,7 @@ const ROUTES = {
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <Layout />,
+		element: <AuthProvider />,
 		children: [
 			{
 				index: true,
@@ -41,15 +42,15 @@ const router = createBrowserRouter([
 				path: ROUTES.PUBLIC.FORGOT,
 				element: <ForgotPassword />,
 			},
+			{
+				path: "/home",
+				children: [{ index: true, element: <Home /> }, {
+					path: '/home/example'
+				}],
+			},
 		],
 	},
-	{
-		path: "/home",
-		element: <PrivateLayout />,
-		children: [{ index: true, element: <Home /> }, {
-            path: '/home/example'
-        }],
-	},
+	
 ]);
 
 export default router;
