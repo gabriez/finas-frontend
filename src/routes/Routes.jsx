@@ -10,6 +10,7 @@ import ForgotPassword from "../pages/public/ForgotPassword";
 import Usuarios from "../pages/private/Usuarios"; 
 import Funcionarios from "../pages/private/Funcionarios";
 import Proyectos from "../pages/private/Proyectos";
+import AuthProvider from "../context/AuthProvider";
 
 const ROUTES = {
 	PUBLIC: {
@@ -19,14 +20,17 @@ const ROUTES = {
 		FORGOT: "/forgot-password",
 	},
     PRIVATE: {
-        INDEX: "/home"
+        INDEX: "/home",
+		USERS: "/home/users",
+		OFFICIALS: "/home/officials",
+		PROJECTS: "/home/projects",
     }
 };
 
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <Layout />,
+		element: <AuthProvider />,
 		children: [
 			{
 				index: true,
@@ -44,25 +48,26 @@ const router = createBrowserRouter([
 				path: ROUTES.PUBLIC.FORGOT,
 				element: <ForgotPassword />,
 			},
+			{
+				path: ROUTES.PRIVATE.INDEX,
+				children: [{ index: true, element: <Home /> },
+					{
+						path: ROUTES.PRIVATE.USERS,
+						element: <Usuarios/>
+					},
+					{
+						path: ROUTES.PRIVATE.OFFICIALS,
+						element: <Funcionarios/>
+					},
+					{
+						path: ROUTES.PRIVATE.PROJECTS,
+						element: <Proyectos/>
+					}
+				],
+			},
 		],
 	},
-	{
-		path: "/home",
-		element: <PrivateLayout />,
-		children: [{ index: true, element: <Home /> },
-		{
-			path: "/home/users",
-			element: <Usuarios/>
-		},
-		{
-			path: "/home/officials",
-			element: <Funcionarios/>
-		},
-		{
-			path: "/home/projects",
-			element: <Proyectos/>
-		}],
-	},
+	
 ]);
 
 export default router;
