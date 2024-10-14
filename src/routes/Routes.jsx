@@ -8,6 +8,8 @@ import PrivateLayout from "../layouts/PrivateLayout";
 import Home from "../pages/private/Home";
 import ForgotPassword from "../pages/public/ForgotPassword";
 import Usuarios from "../pages/private/Usuarios"; 
+import Funcionarios from "../pages/private/Funcionarios";
+import Proyectos from "../pages/private/Proyectos";
 
 const ROUTES = {
 	PUBLIC: {
@@ -51,6 +53,14 @@ const router = createBrowserRouter([
 		{
 			path: "/home/users",
 			element: <Usuarios/>
+		},
+		{
+			path: "/home/officials",
+			element: <Funcionarios/>
+		},
+		{
+			path: "/home/projects",
+			element: <Proyectos/>
 		}],
 	},
 ]);

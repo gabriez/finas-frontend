@@ -1,7 +1,8 @@
+import ProjectList from "../../components/ProjectList/ProjectList"
 
 const Proyectos = () => {
   return (
-    <div>Proyectos</div>
+    <ProjectList/>
   )
 }
 
