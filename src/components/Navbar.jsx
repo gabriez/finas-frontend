@@ -22,7 +22,7 @@ const Navbar = () => {
     <header className="bg-gradient-to-r from-[#063A0A] to-[#5DF153] flex items-center justify-between px-10">
       <img src={logoFinas} alt="logo de finas" className="w-[10%] py-2" />
       <nav className="mx-10">
-        <ul className="flex justify-between pr-10 gap-10 list-none font-semibold text-[#063A0A]">
+        <ul className="flex justify-between pr-10 gap-10 list-none font-semibold text-[#063A0A] text-lg">
           <li className="hover:text-white">
             <Link href="#" to={ROUTES.PRIVATE.INDEX}>
               Inicio
