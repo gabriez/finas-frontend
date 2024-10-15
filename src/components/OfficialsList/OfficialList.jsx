@@ -41,6 +41,26 @@ const OfficialList = () => {
     setShowModal(false);
   };
 
+  const [formData, setFormData] = useState({
+    name: "",
+    lastName: "",
+    document: "",
+    email: "",
+    phone: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+  };
 
  return (
     <div className="text-white flex flex-col justify-center min-h-screen items-center">
@@ -58,9 +78,116 @@ const OfficialList = () => {
             </tr>
         </Table>
         <Pagination/>
-        <CustomModal className="w-[579px] h-[753px] bg-white rounded-[30px] shadow overflow-hidden" show={showModal} onClose={handleModalClose}>
-        <h2 className="w-[579px] p-9 bg-[#073d0b] rounded-tl-[15px] rounded-tr-[30px] shadow text-white text-4xl font-bold font-['Poppins'] text-center">Editar Funcionarios</h2>
-        {/* Aquí puedes añadir un formulario o cualquier otro contenido */}
+        <CustomModal
+          className="w-[579px] h-[753px] bg-white rounded-[30px] shadow overflow-hidden"
+          show={showModal}
+          onClose={handleModalClose}
+        >
+        <h2
+          className="w-[579px] p-9 bg-[#073d0b] rounded-tl-[15px] rounded-tr-[30px] shadow text-white text-4xl font-bold font-['Poppins'] text-center">
+          Editar Funcionarios
+        </h2>
+
+        <form
+        onSubmit={handleSubmit}
+        className=" flex flex-wrap gap-5 items-center content-center justify-center w-[100%] bg-white p-8  rounded-lg "
+        >
+        
+        <div className="w-[410px] h-20 flex-col justify-start items-start gap-2.5 inline-flex">
+
+        <label 
+          className="block text-gray-700 text-lg font-bold mt-2"
+          htmlFor="name"
+        >
+          Nombre
+        </label>
+
+          <input
+            type="text"
+            name="name"
+            placeholder="Introduzca su nombre"
+            value={formData.name}
+            onChange={handleChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        
+
+        <label 
+          className="block text-gray-700 text-lg font-bold mt-2"
+          htmlFor="lastName"
+        >
+          Apellido
+        </label>
+
+          <input
+            type="text"
+            name="lastName"
+            placeholder="Introduzca su apellido"
+            value={formData.lastName}
+            onChange={handleChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        
+
+        <label
+        className="block text-gray-700 text-lg font-bold mt-2"
+        htmlFor="document"
+        >
+          Cédula de Identidad
+        </label>
+
+          <input
+            type="text"
+            name="document"
+            placeholder="18.XXX.XXX"
+            value={formData.document}
+            onChange={handleChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        
+
+        <label
+        className="block text-gray-700 text-lg font-bold mt-2"
+        htmlFor="email"
+        >
+          Email:
+        </label>
+
+          <input
+            type="email"
+            name="email"
+            placeholder="ejemplo@hotmail.com"
+            value={formData.email}
+            onChange={handleChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+
+        <label 
+        className="block text-gray-700 text-lg font-bold mt-2"
+        htmlFor="phone"
+        >
+          Teléfono:
+        </label>
+
+          <input
+            type="text"
+            name="phone"
+            placeholder="04XX-000-0000"
+            value={formData.phone}
+            onChange={handleChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        
+
+          <button
+            type="submit"
+            className=" bg-[#3CAC38] hover:bg-[#063A0A] mx-[8rem] my-[2rem] text-white font-bold text-xl py-2 px-10 rounded focus:outline-none focus:shadow-outline hover:shadow-2xl"
+          >
+            Guardar
+          </button>
+
+        </div>
+      </form>
       </CustomModal>
     </div>  
   )
