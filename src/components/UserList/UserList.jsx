@@ -64,7 +64,6 @@ const UserList = () => {
     console.log(formData);
   };
 
-  console.log("users > ", users)
   useEffect(() => {
     const getData = async () => {
       try {
