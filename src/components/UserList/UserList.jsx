@@ -41,7 +41,6 @@ const UserList = () => {
     setShowModal(false);
   };
 
-  console.log("users > ", users)
   useEffect(() => {
     const getData = async () => {
       try {
