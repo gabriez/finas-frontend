@@ -5,7 +5,7 @@ import { ROUTES } from "../../routes/Routes";
 import ButtonSubmit from "../../components/Forms/ButtonSubmit";
 import { FINASAPI } from "../../lib/FinasApi";
 import { LOCAL_STORAGE_KEYS } from "../../constants";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../../context/AuthProvider";
 

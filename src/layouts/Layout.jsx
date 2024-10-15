@@ -1,5 +1,4 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
 import imagenPrueba from "../assets/imagenPrueba.png";
 import logoFinas from "../assets/logo-finas.png";
 import { ROUTES } from "../routes/Routes";
@@ -9,6 +8,8 @@ import PublicLayout from "./PublicLayout";
 import { LOCAL_STORAGE_KEYS } from "../constants";
 import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Layout = () => {
 	const location = useLocation();
@@ -79,7 +80,7 @@ const Layout = () => {
 	return (
 		<>
 			{path.includes("home") ? <PrivateLayout /> : <PublicLayout />}
-			<Toaster />
+			<ToastContainer/>
 		</>
 	);
 };
