@@ -67,8 +67,37 @@ const put = ({ url = '', body = {}, headers = {}, options = {} }) => {
 		...options,
 	});
 };
+
+const patch = ({ url = '', body = {}, headers = {}, options = {} }) => {
+	const { token } = getToken();
+
+	return axios.patch(readUrl(url), body, {
+		headers: {
+			...HEADERS_DEFAULT,
+			...headers,
+			Authorization: `Bearer ${token}`,
+		},
+		...options,
+	});
+};
+
+const deleteR = ({ url = '', options = {}, headers = {} }) => {
+	const { token } = getToken();
+
+	return axios.delete(readUrl(url), {
+		headers: {
+			...HEADERS_DEFAULT,
+			...headers,
+			Authorization: `Bearer ${token}`,
+		},
+		...options,
+	});
+};
+
 export default {
 	get,
 	post,
 	put,
+	patch,
+	deleteR
 };
