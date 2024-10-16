@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 const UserModalForm = ({ 
     user,
     edit = false,
-    hanldeModalClose,
+    handleModalClose,
     setAllUsers,
 }) => {
   const [roles, setRoles] = useState ( [  ] );
@@ -56,13 +56,14 @@ const UserModalForm = ({
 					setAllUsers((prevState) => {
 						return prevState.map((item) => {
 							if (item.id == user.id) {
+                console.log(result.data)
 								return {
 									...item,
 									username: formData.username,
 									nombre: formData.nombre,
 									apellido: formData.apellido,
 									email: formData.email,
-									role: result.data.role,
+									role: roles.find(item => item.id == result.data.roleId),
 								};
 							}
 							return item;

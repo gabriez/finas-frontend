@@ -122,7 +122,7 @@ const UserList = () => {
         <UserModalForm
          edit = { edit }
          user = {userEdit}
-         hanldeModalClose={handleModalClose}
+         handleModalClose={handleModalClose}
          setAllUsers={setUsers}
         />
       </CustomModal>
