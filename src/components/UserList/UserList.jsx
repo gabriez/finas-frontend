@@ -13,29 +13,10 @@ import UserModalForm from './UserModalForm';
 
 Modal.setAppElement('#root');
 
-// const users = [
-//   { name: "The Sliding", email: "ejemplo@gmail.com", username: "username.example12", role: "Administrador" },
-//   { name: "Witchy Woman", email: "ejemplo@gmail.com", username: "username.example12", role: "Trabajador" },
-//   { name: "Shining Star", email: "ejemplo@gmail.com", username: "username.example12", role: "Trabajador" },
-//   { name: "Shining Star", email: "ejemplo@gmail.com", username: "username.example12", role: "Trabajador" },
-// ];
-
-// const dataMap = users.map((user, index) => (
-//   <tr key={index} className="w-[1600px] border-t-2 border-[#eeeeee]">
-//     <td className="pl-20">{user.name}</td>
-//     <td>{user.email}</td>
-//     <td>{user.username}</td>
-//     <td>{user.role}</td>
-//     <td className="gap-9">
-//       <button className="mr-4"><IoCreateOutline size={40} /></button>
-//       <button><TiDelete size={40} /></button>
-//     </td>
-//   </tr>
-// ))
-
 const UserList = () => {
   const [showModal, setShowModal] = useState(false);
   const [edit, setEdit] = useState(false);
+  const [loader, setLoader] = useState (false);
   const [userEdit, setUserEdit] = useState ({});
   const [users, setUsers] = useState([]);
 
@@ -52,9 +33,12 @@ const UserList = () => {
   useEffect(() => {
     const getData = async () => {
       try {
+        setLoader(true);
         let result = await FINASAPI.getUsers('all');
         setUsers(result.data)
+        setLoader(false);
       } catch (error) {
+        setLoader(false);
         console.log("error in UsersList > ", error)
         toast.error("Ocurrio un error, recarga la pagina")
       }
@@ -65,31 +49,61 @@ const UserList = () => {
   return (
     <div className="text-white flex flex-col justify-center min-h-screen items-center">
       <div className="flex 2xl:w-[1600px] w-[1200px] justify-between border-b-2 mb-4 pb-2 border-[#5df153]">
-        <h1 className="text-white text-[40px] font-bold font-['Poppins']">Lista de Usuarios</h1>
-        <ButtonAdd classNameCustom={" w-[244px] h-[59px]"} icon={<UserPlus className="w-10 h-10 relative"/>} onClick={() => {
+        <h1 className="text-white text-[40px] font-bold font-['Poppins']">
+          Lista de Usuarios
+        </h1>
+        <ButtonAdd
+        classNameCustom={" w-[244px] h-[59px]"}
+        icon={<UserPlus className="w-10 h-10 relative"/>}
+        onClick={() => {
           handleModalOpen();
           setUserEdit({});
           setEdit(false);
-        }}>Añadir Usuario</ButtonAdd>
+        }}>
+          Añadir Usuario
+        </ButtonAdd>
       </div>
-        <Table classNameCustom={ " 2xl:w-[1600px] w-[1200px] " } dataMap={
+      <Table
+      classNameCustom={ " 2xl:w-[1600px] w-[1200px] " }
+      dataMap={
+        users.length > 0 ? (
           users.map((user, index) => (
-            <tr key={index} className="w-[1600px] border-t-2 border-[#eeeeee]">
-              <td className="pl-20 py-10">{user.nombre} {user.apellido}</td>
+            <tr
+              key={index}
+              className="w-[1600px] border-t-2 border-[#eeeeee]">
+              <td className="pl-20 py-10">
+                {user.nombre} {user.apellido}
+              </td>
               <td>{user.email}</td>
               <td>{user.username}</td>
               <td>{user.role.rol}</td>
               <td className="gap-9">
-                <button className="mr-4"
-                onClick={() => {
-                  setEdit(true);
-                  setUserEdit(user);
-                  handleModalOpen();
-                }}><IoCreateOutline size={40} /></button>
-                <button><TiDelete size={40} /></button>
+                <button
+                  className="mr-4"
+                  onClick={() => {
+                    setEdit(true);
+                    setUserEdit(user);
+                    handleModalOpen();
+                }}>
+                  <IoCreateOutline size={40} /></button>
+                {/* <button><TiDelete size={40} /></button> */}
               </td>
             </tr>
           ))
+        ) : (
+          <tr>
+							<td></td>
+							<td className="py-10">
+								{loader ? (
+									<span className="loader"></span>
+								) : (
+									<span className=" text-right block ">No hay usuarios</span>
+								)}
+							</td>
+							<td></td>
+							<td></td>
+          </tr>
+        )
         }>
             <tr className="text-[#063a0a] text-2xl font-semibold font-['Poppins'] border-b-2 border-[#063a0a] bg-[#bdd8bf]">
               <th className="pl-20">Nombre</th>
@@ -99,16 +113,17 @@ const UserList = () => {
               <th className="w-25"></th>
             </tr>
         </Table>
-        <Pagination/>
+        {/* <Pagination/> */}
         <CustomModal
           className="w-[579px] h-[820px] bg-white rounded-[30px] shadow overflow-x-hidden"
           show={showModal}
           onClose={handleModalClose}
         >
-
         <UserModalForm
          edit = { edit }
          user = {userEdit}
+         hanldeModalClose={handleModalClose}
+         setAllUsers={setUsers}
         />
       </CustomModal>
     </div>  
