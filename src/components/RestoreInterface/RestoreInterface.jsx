@@ -76,7 +76,7 @@ function RestoreInterface() {
           type="submit"
           className=" bg-[#3CAC38] hover:bg-[#063A0A] w-full text-white font-bold text-xl py-3 px-10 rounded focus:outline-none focus:shadow-outline hover:shadow-2xl"
         >
-          Importar archivo SQL
+          Importar archivo JSON
           <AiOutlineImport className="w-[45px] h-[32px] inline"/>
         </button>
         </div>
