@@ -43,6 +43,7 @@ const Login = () => {
 					email: result.data.user.email,
 					rol: result.data.user.rol,
 					endTime: exp,
+					id: result.data.user.id
 				});
 				toast.success("Inició sesión exitosamente");
 				navigate(ROUTES.PRIVATE.INDEX);

@@ -37,6 +37,7 @@ const Layout = () => {
 				email: "",
 				rol: "",
 				endTime: "",
+				id: 0
 			});
 			navigate(ROUTES.PUBLIC.INDEX);
       return
@@ -50,6 +51,7 @@ const Layout = () => {
 					email: "",
 					rol: "",
 					endTime: "",
+					id: 0
 				});
 				sessionStorage.removeItem(LOCAL_STORAGE_KEYS.accessToken);
 				toast.error("Debes iniciar sesión nuevamente");
@@ -64,6 +66,7 @@ const Layout = () => {
 					email: jtw.email,
 					rol: jtw.rol,
 					endTime: jtw.exp,
+					id: jtw.id
 				});
 				redirectHome();
 			} else {
