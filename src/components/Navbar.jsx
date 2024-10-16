@@ -29,17 +29,17 @@ const Navbar = () => {
             <Link href="#" to={ROUTES.PRIVATE.INDEX}>Inicio</Link>
           </li>
           <li className="hover:text-white">
-            <Link href="#" to={ROUTES.PRIVATE.INDEX}>Proyectos</Link>
+            <Link href="#" to={ROUTES.PRIVATE.PROJECTS}>Proyectos</Link>
           </li>
           <AccordionItem title="Configuración">
             <li className="hover:text-white">
-              <Link href="#" to={ROUTES.PRIVATE.INDEX}>Usuarios</Link>
+              <Link href="#" to={ROUTES.PRIVATE.USERS}>Usuarios</Link>
             </li>
             <li className="hover:text-white">
-              <Link href="#" to={ROUTES.PRIVATE.INDEX}>Respaldar</Link>
+              <Link href="#" to={ROUTES.PRIVATE.SUPPORT}>Respaldar</Link>
             </li>
             <li className="hover:text-white">
-              <Link href="#" to={ROUTES.PRIVATE.INDEX}>Restaurar</Link>
+              <Link href="#" to={ROUTES.PRIVATE.RESTORE}>Restaurar</Link>
             </li>
           </AccordionItem>
           <li className="hover:text-white">
