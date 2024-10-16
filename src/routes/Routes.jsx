@@ -10,6 +10,8 @@ import ForgotPassword from "../pages/public/ForgotPassword";
 import Usuarios from "../pages/private/Usuarios"; 
 import Funcionarios from "../pages/private/Funcionarios";
 import Proyectos from "../pages/private/Proyectos";
+import Respaldar from "../pages/private/Respaldar";
+import Restaurar from "../pages/private/Restaurar";
 import AuthProvider from "../context/AuthProvider";
 
 const ROUTES = {
@@ -24,6 +26,8 @@ const ROUTES = {
 		USERS: "/home/users",
 		OFFICIALS: "/home/officials",
 		PROJECTS: "/home/projects",
+		SUPPORT: "/home/support",
+		RESTORE: "/home/restore",
     }
 };
 
@@ -62,7 +66,15 @@ const router = createBrowserRouter([
 					{
 						path: ROUTES.PRIVATE.PROJECTS,
 						element: <Proyectos/>
-					}
+					},
+					{
+						path: ROUTES.PRIVATE.SUPPORT,
+						element: <Respaldar/>
+					},
+					{
+						path: ROUTES.PRIVATE.RESTORE,
+						element: <Restaurar/>
+					},
 				],
 			},
 		],

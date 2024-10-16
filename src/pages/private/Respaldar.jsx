@@ -1,7 +1,8 @@
+import SupportInterface from "../../components/SupportInterface/SupportInterface"
 
 const Respaldar = () => {
   return (
-    <div>Respaldar</div>
+    <SupportInterface />
   )
 }
 

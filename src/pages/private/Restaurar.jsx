@@ -1,7 +1,8 @@
+import RestoreInterface from "../../components/RestoreInterface/RestoreInterface"
 
 const Restaurar = () => {
   return (
-    <div>Restaurar</div>
+    <RestoreInterface/>
   )
 }
 
