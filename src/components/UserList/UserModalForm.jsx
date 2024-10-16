@@ -3,19 +3,21 @@ import { useEffect } from "react";
 import { FINASAPI } from "../../lib/FinasApi";
 import { toast } from "react-toastify";
 
-
 const UserModalForm = ({ 
-    user, edit = false, hanldeModalClose
+    user,
+    edit = false,
+    hanldeModalClose,
+    setAllUsers,
 }) => {
+  const [roles, setRoles] = useState ( [  ] );
 
-    const [roles, setRoles] = useState ([]);
   const [formData, setFormData] = useState({
     username: user.username ?? "",
     nombre: user.nombre ?? "",
     apellido: user.apellido ?? "",
     email: user.email ?? "",
     password: user.password ?? "",
-    rol: user.rol ?? "",
+    roleId: user.roleId ?? "",
   });
 
   const handleChange = (e) => {
@@ -25,7 +27,76 @@ const UserModalForm = ({
       [name]: value,
     });
   };
-  console.log(roles)
+
+  const handleSubmit = async (e) => {
+		e.preventDefault();
+		try {
+			if (edit) {
+				let data = {
+					username: formData.username,
+					nombre: formData.nombre,
+					apellido: formData.apellido,
+					email: formData.email,
+					roleId: formData.roleId,
+				};
+
+				if (Object.values(data).includes("")) {
+					toast.error("Ningun campo puede estar vacio");
+					return;
+				}
+
+				if (formData.password != "") {
+					data.password = formData.password;
+				}
+
+				let result = await FINASAPI.patchUsers(user.id, data);
+
+				if (result.status) {
+					toast.success("Se actualizo correctamente el usuario");
+					setAllUsers((prevState) => {
+						return prevState.map((item) => {
+							if (item.id == user.id) {
+								return {
+									...item,
+									username: formData.username,
+									nombre: formData.nombre,
+									apellido: formData.apellido,
+									email: formData.email,
+									role: result.data.role,
+								};
+							}
+							return item;
+						});
+					});
+					handleModalClose();
+				} else {
+					toast.error(result.message);
+				}
+			} else {
+				if (Object.values(formData).includes("")) {
+					toast.error("Ningun campo puede estar vacio");
+					return;
+				}
+
+				let result = await FINASAPI.createUsers({
+					...formData,
+				});
+
+				if (result.status) {
+					toast.success("Se creo correctamente el usuario");
+					setAllUsers((prevState) => {
+						return [...prevState, result.data];
+					});
+					handleModalClose();
+				} else {
+					toast.error(result.message);
+				}
+			}
+		} catch (error) {
+			console.log(error);
+			toast.error("Ocurrio un error en el servidor");
+		}
+	};
 
   useEffect(() => {
     const getRoles = async () => {
@@ -43,11 +114,6 @@ const UserModalForm = ({
     };
     getRoles()
   }, [])
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-  };
 
   return (
     <>
@@ -146,11 +212,13 @@ const UserModalForm = ({
           htmlFor="rol"
         >
           Rol:
+        </label>
+
           <select
-            name="rol"
-            id="rol"
+            name="roleId"
+            id="roleId"
             placeholder="Seleciona un rol"
-            value={formData.rol}
+            value={formData.roleId}
             onChange={handleChange}
             className="shadow  border rounded w-full h-[50px] py-2 px-8 text-gray-700 inline-flex"
           >
@@ -161,11 +229,12 @@ const UserModalForm = ({
             >
               Seleccione el rol del usuario
             </option>
-            <option value="usuario">Usuario</option>
-            <option value="supervisor">Supervisor</option>
-            <option value="administrador">Administrador</option>
+            {roles.filter(rol => rol.rol != "encargado").map
+              (rol => (
+              <option key={rol.id + rol.rol} value={rol.id} > 
+              {rol.rol} 
+              </option>))}
           </select>
-        </label>
 
         <button
           type="submit"
