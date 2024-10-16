@@ -83,6 +83,38 @@ class CoreFinasAPI {
 		}
 	}
 
+	async getRoles() {
+		const result = {
+			data: null,
+			message: '',
+			status: false,
+		};
+
+		try {
+			const response = await httpClient.get({
+				url: `/users/roles`,
+			});
+
+			const data = response.data.data;
+			const status = response.data.status;
+
+			if (status) {
+				result.data = data
+				result.status = true;
+			} else {
+                result.data = data
+            }
+
+			result.message = response.data.message;
+
+			return result;
+		} catch (error) {
+			console.log('> error in getRoles', error);
+
+			return handleError(error, result);
+		}
+	}
+
 	async createUsers(form) {
 		const result = {
 			data: null,
@@ -93,6 +125,40 @@ class CoreFinasAPI {
 		try {
 			const response = await httpClient.post({
 				url: `/users`,
+				body: form
+			});
+
+			const data = response.data.data;
+			const status = response.data.status;
+
+			if (status) {
+				result.data = data
+				result.status = true;
+			} else {
+                result.data = data
+            }
+
+			result.message = response.data.message;
+
+			return result;
+		} catch (error) {
+			console.log('> error in createUsers', error);
+
+			
+			return handleError(error, result);
+		}
+	}
+
+	async patchUsers(id, form) {
+		const result = {
+			data: null,
+			message: '',
+			status: false,
+		};
+
+		try {
+			const response = await httpClient.patch({
+				url: `/users/${id}`,
 				body: form
 			});
 
