@@ -14,6 +14,7 @@ const AuthProvider = ({ children }) => {
         email: '',
         rol: '',
         endTime: 0,
+        id: 0
     })
 
 	return <AuthContext.Provider value={{setUserData, userData}}><Layout/></AuthContext.Provider>;
