@@ -74,6 +74,7 @@ const ProjectList = () => {
 	};
 
 	const handleModalClose = () => {
+		setShowProject({})
 		setShowModal(false);
 	};
 
@@ -122,6 +123,10 @@ const ProjectList = () => {
 								<td>{project.status}</td>
 								<td className="flex items-center h-[100px] justify-center">
 									<ButtonAdd
+									onClick={() => {
+										setShowProject(project)
+										handleModalOpen()
+									}}
 										classNameCustom={" w-[161px] h-[59px]"}
 										icon={<LuEye className="w-6 h-6" />}>
 										Ver Más

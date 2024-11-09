@@ -36,6 +36,9 @@ const Navbar = () => {
               <Link href="#" to={ROUTES.PRIVATE.USERS}>Usuarios</Link>
             </li>
             <li className="hover:text-white">
+              <Link href="#" to={ROUTES.PRIVATE.OFFICIALS}>Encargados</Link>
+            </li>
+            <li className="hover:text-white">
               <Link href="#" to={ROUTES.PRIVATE.SUPPORT}>Respaldar</Link>
             </li>
             <li className="hover:text-white">

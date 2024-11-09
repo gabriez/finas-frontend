@@ -306,13 +306,13 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 				<div className="mb-4 w-[45%]">
 					<label
 						className="block text-gray-700 text-lg font-bold mb-2"
-						htmlFor="message">
+						htmlFor="puntoDeReferencia">
 						Punto de referencia
 					</label>
 					<textarea
-						name="message"
+						name="puntoDeReferencia"
 						placeholder="Introduzca un punto de referencia"
-						value={formData.message}
+						value={formData.puntoDeReferencia}
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
@@ -425,9 +425,9 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 						Observacion
 					</label>
 					<textarea
-						name="message"
+						name="observacion"
 						placeholder="Introduzca la Observacion"
-						value={formData.message}
+						value={formData.observacion}
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>

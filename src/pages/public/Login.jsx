@@ -4,7 +4,7 @@ import InputText from "../../components/Forms/InputText";
 import { ROUTES } from "../../routes/Routes";
 import ButtonSubmit from "../../components/Forms/ButtonSubmit";
 import { FINASAPI } from "../../lib/FinasApi";
-import { LOCAL_STORAGE_KEYS } from "../../constants";
+import { LOCAL_STORAGE_KEYS, TITLE } from "../../constants";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../../context/AuthProvider";
@@ -14,6 +14,7 @@ const Login = () => {
 		email: "",
 		password: "",
 	});
+	document.title = `${TITLE} - Inicio de sesión`
 
 	const { setUserData } = useAuth();
 
