@@ -8,6 +8,7 @@ import { LuEye } from "react-icons/lu";
 import ProjectModalForm from "./ProjectModalForm";
 import { toast } from "react-toastify";
 import { FINASAPI } from "../../lib/FinasApi";
+import { formatDate } from "../helpers/lib";
 
 const projects = [
 	{
@@ -118,8 +119,8 @@ const ProjectList = () => {
 								<td className="pl-20 py-10">{project.titulo}</td>
 								<td>{project.municipio}</td>
 								<td>{project.propuesta}</td>
-								<td>{project.lapsoInicio}</td>
-								<td>{project.lapsoFin}</td>
+								<td>{formatDate(project.lapsoInicio)}</td>
+								<td>{formatDate(project.lapsoFin)}</td>
 								<td>{project.status}</td>
 								<td className="flex items-center h-[100px] justify-center">
 									<ButtonAdd
