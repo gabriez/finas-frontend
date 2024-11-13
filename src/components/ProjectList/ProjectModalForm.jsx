@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FINASAPI } from "../../lib/FinasApi";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthProvider";
+import { formatInputDate } from "../helpers/lib";
 
 const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) => {
 	const [officials, setOfficials] = useState([]);
@@ -9,7 +10,11 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 	const [parroquias, setParroquias] = useState([]);
 	const [sectores, setSectores] = useState([]);
 	const [status, setStatus] = useState([]);
-  const [edit, setEdit] = useState(false)
+	const [changeLocations, setChangeLocations] = useState({
+		municipio: false,
+		parroquia: false,
+	})
+  	const [edit, setEdit] = useState(false)
 	const { userData } = useAuth();
 
 	const [formData, setFormData] = useState({
@@ -31,16 +36,16 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 		propuesta: project.propuesta ?? "",
 		status: project.status ?? "",
 		observacion: project.observacion ?? "",
-		lapsoInicio: project.lapsoInicio ?? "",
-		lapsoFin: project.lapsoFin ?? "",
+		lapsoInicio: project.lapsoInicio ? formatInputDate(project.lapsoInicio) : "",
+		lapsoFin: project.lapsoFin? formatInputDate(project.lapsoFin) : "",
 		ente: project.ente ?? "",
 		entePhone: project.entePhone ?? "",
 	});
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
+		let locationRegex = /municipio|parroquia|sector/;
 		setFormData((prevState) => {
-			let locationRegex = /municipio|parroquia|sector/;
 			if (locationRegex.test(name)) {
 				let newValues = value.split("-");
 				return {
@@ -51,6 +56,15 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 			}
 			return { ...prevState, [name]: value };
 		});
+		if (locationRegex.test(name)) {
+			setChangeLocations(prevState => {
+				return {
+					...prevState,
+					[name]: !prevState[name]
+				}
+			})
+		}
+		
 	};
 
 	const handleSubmit = async (e) => {
@@ -113,7 +127,6 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 	}, []);
 
 	useEffect(() => {
-		console.log("hola");
 		const getParroquias = async () => {
 			try {
 				let result = await FINASAPI.getParroquia(formData.municipioId);
@@ -142,8 +155,8 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 				toast.error("Ocurrio un error, recarga la pagina");
 			}
 		};
-		if (formData.municipio != "" && formData.parroquiaId != "") getSector();
-	}, [formData]);
+		if (formData.municipio != "" && formData.parroquia != "") getSector();
+	}, [changeLocations.municipio, changeLocations.parroquia]);
 
 	return (
 		<>
@@ -230,7 +243,10 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 						name="municipio"
 						id="municipio"
 						onChange={handleChange}
-						defaultValue={formData.municipio}>
+						defaultValue={
+							formData.municipioId + "-" + formData.municipio
+						}>
+						
 						<option value="">Seleccione un municipio</option>
 
 						{Array.isArray(municipios) && municipios.length > 0 ? (
@@ -285,7 +301,9 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 						type="sector"
 						name="sector"
 						onChange={handleChange}
-						defaultValue={formData.sector}
+						defaultValue={
+							formData.sectorId + "-" + formData.sector
+						}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
 						<option value=""> Selecciona un sector </option>
 						{Array.isArray(sectores) && sectores.length > 0 ? (

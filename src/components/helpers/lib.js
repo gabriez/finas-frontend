@@ -6,3 +6,7 @@ export const formatDate = fecha => {
         day: '2-digit'
     });
 }
+
+export const formatInputDate = fecha => {
+    return new Date(fecha).toISOString().split('T')[0]
+}
