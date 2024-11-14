@@ -4,17 +4,22 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthProvider";
 import { formatInputDate } from "../helpers/lib";
 
-const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) => {
-	const [officials, setOfficials] = useState([]);
-	const [municipios, setMunicipios] = useState([]);
+const ProjectModalForm = ({
+	showData = false,
+	project,
+	handleCloseModal,
+	setProjects,
+	officials,
+	municipios,
+	status,
+}) => {
 	const [parroquias, setParroquias] = useState([]);
 	const [sectores, setSectores] = useState([]);
-	const [status, setStatus] = useState([]);
 	const [changeLocations, setChangeLocations] = useState({
 		municipio: false,
 		parroquia: false,
-	})
-  	const [edit, setEdit] = useState(false)
+	});
+	const [disable, setDisable] = useState(true);
 	const { userData } = useAuth();
 
 	const [formData, setFormData] = useState({
@@ -22,7 +27,7 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 		descripcion: project.descripcion ?? "",
 		encargadoId: project.encargadoId ?? 0,
 		userId: project.userId ?? userData.id,
-		enteEmail: project.enteEmail ?? "",
+		// enteEmail: project.enteEmail ?? "",
 		municipioId: project.municipioId ?? "",
 		municipio: project.municipio ?? "",
 		parroquiaId: project.parroquiaId ?? "",
@@ -36,10 +41,12 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 		propuesta: project.propuesta ?? "",
 		status: project.status ?? "",
 		observacion: project.observacion ?? "",
-		lapsoInicio: project.lapsoInicio ? formatInputDate(project.lapsoInicio) : "",
-		lapsoFin: project.lapsoFin? formatInputDate(project.lapsoFin) : "",
+		lapsoInicio: project.lapsoInicio
+			? formatInputDate(project.lapsoInicio)
+			: "",
+		lapsoFin: project.lapsoFin ? formatInputDate(project.lapsoFin) : "",
 		ente: project.ente ?? "",
-		entePhone: project.entePhone ?? "",
+		// entePhone: project.entePhone ?? "",
 	});
 
 	const handleChange = (e) => {
@@ -57,21 +64,50 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 			return { ...prevState, [name]: value };
 		});
 		if (locationRegex.test(name)) {
-			setChangeLocations(prevState => {
+			setChangeLocations((prevState) => {
 				return {
 					...prevState,
-					[name]: !prevState[name]
-				}
-			})
+					[name]: !prevState[name],
+				};
+			});
 		}
-		
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			if (edit) {
+			if (showData) {
+				if (Object.values(formData).includes("")) {
+					toast.error("Ningun campo puede estar vacio");
+					return;
+				}
+				let data = {
+					...formData,
+					encargadoId: parseInt(formData.encargadoId),
+					anoAprob: parseInt(formData.anoAprob),
+				};
+				let result = await FINASAPI.editProjects(data, project.id);
+				if (result.status) {
+					toast.success("Edito el proyecto exitosamente");
+					setProjects((prevState) => {
+						return prevState.map((item) => {
+							if (item.id == project.id) {
+								return {
+									...formData,
+								};
+							}
+							return item;
+						});
+					});
+
+					handleCloseModal();
+				}
 			} else {
+				console.log(formData);
+				if (Object.values(formData).includes("")) {
+					toast.error("Ningun campo puede estar vacio");
+					return;
+				}
 				let data = {
 					...formData,
 					encargadoId: parseInt(formData.encargadoId),
@@ -79,8 +115,11 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 				};
 				let result = await FINASAPI.createProjects(data);
 				if (result.status) {
+					setProjects((prevState) => {
+						return [...prevState, result.data];
+					});
 					toast.success("Creo el proyecto exitosamente");
-          handleCloseModal()
+					handleCloseModal();
 				}
 			}
 		} catch (error) {
@@ -88,43 +127,6 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 			toast.error("Ocurrio un error creando el proyecto");
 		}
 	};
-
-	useEffect(() => {
-		const getEstados = async () => {
-			try {
-				let result = await FINASAPI.getStates();
-				if (result.status) setStatus(result.data);
-				else toast.error(result.message);
-			} catch (error) {
-				console.log("error in getEstados > ", error);
-				toast.error("Ocurrio un error, recarga la pagina");
-			}
-		};
-		getEstados();
-
-		const getEncargados = async () => {
-			try {
-				let result = await FINASAPI.getUsers("encargado");
-				if (result.status) setOfficials(result.data);
-				else toast.error(result.message);
-			} catch (error) {
-				console.log("error in getEncargados > ", error);
-				toast.error("Ocurrio un error, recarga la pagina");
-			}
-		};
-		getEncargados();
-
-		const getMunicipios = async () => {
-			try {
-				let result = await FINASAPI.getMunicipios();
-				if (result.status) setMunicipios(result.data);
-			} catch (error) {
-				console.log("error in getEstados > ", error);
-				toast.error("Ocurrio un error, recarga la pagina");
-			}
-		};
-		getMunicipios();
-	}, []);
 
 	useEffect(() => {
 		const getParroquias = async () => {
@@ -180,6 +182,7 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 						value={formData.titulo}
 						id="titulo"
 						onChange={handleChange}
+						disabled={showData && disable}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
 				</div>
@@ -194,6 +197,7 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 						name="ente"
 						placeholder="Seleccione el ente al que pertenece"
 						value={formData.ente}
+						disabled={showData && disable}
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
@@ -209,6 +213,7 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 						name="propuesta"
 						placeholder="Introduzca la propuesta del Proyecto"
 						value={formData.propuesta}
+						disabled={showData && disable}
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
@@ -225,6 +230,7 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 						name="descripcion"
 						placeholder="Escriba una breve descripcion de la obra"
 						value={formData.descripcion}
+						disabled={showData && disable}
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
@@ -242,11 +248,9 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 						name="municipio"
 						id="municipio"
+						disabled={showData && disable}
 						onChange={handleChange}
-						defaultValue={
-							formData.municipioId + "-" + formData.municipio
-						}>
-						
+						value={formData.municipioId + "-" + formData.municipio}>
 						<option value="">Seleccione un municipio</option>
 
 						{Array.isArray(municipios) && municipios.length > 0 ? (
@@ -273,7 +277,8 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 					<select
 						name="parroquia"
 						onChange={handleChange}
-						defaultValue={formData.parroquia}
+						disabled={showData && disable}
+						value={formData.parroquiaId + "-" + formData.parroquia}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
 						<option value=""> Selecciona una parroquia </option>
 						{Array.isArray(parroquias) && parroquias.length > 0 ? (
@@ -300,10 +305,9 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 					<select
 						type="sector"
 						name="sector"
+						disabled={showData && disable}
 						onChange={handleChange}
-						defaultValue={
-							formData.sectorId + "-" + formData.sector
-						}
+						value={formData.sectorId + "-" + formData.sector}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
 						<option value=""> Selecciona un sector </option>
 						{Array.isArray(sectores) && sectores.length > 0 ? (
@@ -330,6 +334,7 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 					<textarea
 						name="puntoDeReferencia"
 						placeholder="Introduzca un punto de referencia"
+						disabled={showData && disable}
 						value={formData.puntoDeReferencia}
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -345,6 +350,7 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 						type="text"
 						name="coordenadasLat"
 						placeholder="Introduzca las Coordenadas de Latitud"
+						disabled={showData && disable}
 						value={formData.coordenadasLat}
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -360,6 +366,7 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 						type="text"
 						name="coordenadasLong"
 						placeholder="Introduzca las Coordenadas de Longitud"
+						disabled={showData && disable}
 						value={formData.coordenadasLong}
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -375,6 +382,7 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 						type="text"
 						name="anoAprob"
 						placeholder="Introduzca el año de aprobacion"
+						disabled={showData && disable}
 						value={formData.anoAprob}
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -393,6 +401,7 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 						name="encargadoId"
 						id=""
+						disabled={showData && disable}
 						onChange={handleChange}
 						defaultValue={formData.encargadoId}>
 						<option value="">Seleccione un encargado</option>
@@ -421,6 +430,7 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 					<select
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 						name="status"
+						disabled={showData && disable}
 						id="status"
 						onChange={handleChange}
 						defaultValue={formData.status}>
@@ -446,6 +456,7 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 						name="observacion"
 						placeholder="Introduzca la Observacion"
 						value={formData.observacion}
+						disabled={showData && disable}
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
@@ -460,6 +471,7 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 						type="date"
 						name="lapsoInicio"
 						placeholder="Seleccione el lapso de Inicio"
+						disabled={showData && disable}
 						value={formData.lapsoInicio}
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -475,16 +487,39 @@ const ProjectModalForm = ({ showData, project, handleCloseModal, setProjects }) 
 						type="date"
 						name="lapsoFin"
 						placeholder="Seleccione el lapso de fin"
+						disabled={showData && disable}
 						value={formData.lapsoFin}
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
 				</div>
-				<button
-					type="submit"
-					className=" bg-[#3CAC38] hover:bg-[#063A0A] mx-auto text-white font-bold text-xl py-2 px-10 rounded focus:outline-none focus:shadow-outline hover:shadow-2xl">
-					Guardar
-				</button>
+				<div className="flex justify-between w-full items-center">
+					{showData && (
+						<label className="inline-flex flex-col cursor-pointer">
+							<span className="mb-2 font-medium text-gray-700">
+								Editar el proyecto
+							</span>
+							<input type="checkbox" value="" className="sr-only peer" onClick={() => {
+								setDisable(prevState => !prevState);
+							}} />
+							<div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:bg-[#3CAC38] dark:peer-focus:bg-[#063A0A] dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#3CAC38]"></div>
+						</label>
+					)}
+
+					<button
+						type="submit"
+						disable={showData && disable}
+						className=" bg-[#3CAC38] hover:bg-[#063A0A]  text-white font-bold text-xl py-2 px-10 rounded focus:outline-none focus:shadow-outline hover:shadow-2xl">
+						{showData ? "Editar" : "Guardar"}
+					</button>
+					{showData && (
+						<button
+							type="button"
+							className=" bg-[#3CAC38] hover:bg-[#063A0A]  text-white font-bold text-xl py-2 px-10 rounded focus:outline-none focus:shadow-outline hover:shadow-2xl">
+							Imprimir PDF
+						</button>
+					)}
+				</div>
 			</form>
 		</>
 	);

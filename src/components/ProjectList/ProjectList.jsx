@@ -64,19 +64,23 @@ const dataMap = projects.map((project, index) => (
 ));
 
 const ProjectList = () => {
+	const [officials, setOfficials] = useState([]);
+	const [municipios, setMunicipios] = useState([]);
+	const [status, setStatus] = useState([]);
 	const [showModal, setShowModal] = useState(false);
 	const [loader, setLoader] = useState(false);
 	const [projects, setProjects] = useState([]);
-  const [showData, setShowData] = useState(false)
-  const [showProject, setShowProject] = useState({})
+	const [showData, setShowData] = useState(false);
+	const [showProject, setShowProject] = useState({});
 
 	const handleModalOpen = () => {
 		setShowModal(true);
 	};
 
 	const handleModalClose = () => {
-		setShowProject({})
+		setShowProject({});
 		setShowModal(false);
+		setShowData(false)
 	};
 
 	useEffect(() => {
@@ -93,6 +97,25 @@ const ProjectList = () => {
 			setLoader(false);
 		};
 		getProjects();
+	}, []);
+
+	useEffect(() => {
+		const initialRequest = async () => {
+			try {
+				let [municipiosRes, encargadosRes, statesRes] = await Promise.all([
+					FINASAPI.getMunicipios(),
+					FINASAPI.getUsers("encargado"),
+					FINASAPI.getStates(),
+				]);
+				if (municipiosRes.status) setMunicipios(municipiosRes.data);
+				if (encargadosRes.status) setOfficials(encargadosRes.data);
+				if (statesRes.status) setStatus(statesRes.data);
+			} catch (error) {
+				console.log("error in initialRequest > ", error);
+				toast.error("Ocurrio un error, recarga la pagina");
+			}
+		};
+		initialRequest();
 	}, []);
 
 	return (
@@ -124,10 +147,11 @@ const ProjectList = () => {
 								<td>{project.status}</td>
 								<td className="flex items-center h-[100px] justify-center">
 									<ButtonAdd
-									onClick={() => {
-										setShowProject(project)
-										handleModalOpen()
-									}}
+										onClick={() => {
+											setShowProject(project);
+											handleModalOpen();
+											setShowData(true)
+										}}
 										classNameCustom={" w-[161px] h-[59px]"}
 										icon={<LuEye className="w-6 h-6" />}>
 										Ver Más
@@ -168,7 +192,15 @@ const ProjectList = () => {
 				className="w-[50%] h-[90%] overflow-scroll overflow-x-hidden bg-white rounded-[30px] shadow "
 				show={showModal}
 				onClose={handleModalClose}>
-				<ProjectModalForm handleCloseModal={handleModalClose} project={showProject}/>
+				<ProjectModalForm
+					municipios={municipios}
+					officials={officials}
+					status={status}
+					handleCloseModal={handleModalClose}
+					project={showProject}
+					setProjects={setProjects}
+					showData={showData}
+				/>
 			</CustomModal>
 		</div>
 	);
