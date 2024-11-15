@@ -119,7 +119,7 @@ const ProjectList = () => {
 	}, []);
 
 	return (
-		<div className="text-white flex flex-col justify-center min-h-screen items-center py-10">
+		<div className="text-white flex flex-col justify-center min-h-screen items-center py-14">
 			<div className="flex 2xl:w-[1600px] w-[1200px] justify-between items-center border-b-2 mb-4 pb-2 border-[#5df153]">
 				<h1 className="text-white text-[40px] font-bold font-['Poppins']">
 					Lista de Proyectos

@@ -39,7 +39,7 @@ const Navbar = () => {
               <Link href="#" to={ROUTES.PRIVATE.OFFICIALS}>Encargados</Link>
             </li>
             <li className="hover:text-white">
-              <Link href="#" to={ROUTES.PRIVATE.SUPPORT}>Respaldar</Link>
+              <Link href="#" to={ROUTES.PRIVATE.BACKUP}>Respaldar</Link>
             </li>
             <li className="hover:text-white">
               <Link href="#" to={ROUTES.PRIVATE.RESTORE}>Restaurar</Link>
