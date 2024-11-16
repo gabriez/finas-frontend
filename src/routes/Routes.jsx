@@ -13,6 +13,7 @@ import Proyectos from "../pages/private/Proyectos";
 import Respaldar from "../pages/private/Respaldar";
 import Restaurar from "../pages/private/Restaurar";
 import AuthProvider from "../context/AuthProvider";
+import Estadisticas from "../pages/private/Estadisticas";
 
 const ROUTES = {
 	PUBLIC: {
@@ -28,6 +29,7 @@ const ROUTES = {
 		PROJECTS: "/home/projects",
 		SUPPORT: "/home/support",
 		RESTORE: "/home/restore",
+		STATISTICS: "/home/statistics",
     }
 };
 
@@ -74,6 +76,10 @@ const router = createBrowserRouter([
 					{
 						path: ROUTES.PRIVATE.RESTORE,
 						element: <Restaurar/>
+					},
+					{
+						path: ROUTES.PRIVATE.STATISTICS,
+						element: <Estadisticas/>
 					},
 				],
 			},
