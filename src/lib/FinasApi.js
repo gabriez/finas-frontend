@@ -405,6 +405,40 @@ class CoreFinasAPI {
 			return handleError(error, result);
 		}
 	}
+
+	async getStatistics() {
+		const result = {
+			data: null,
+			message: "",
+			status: false,
+		};
+
+		try {
+			const response = await httpClient.get({
+				url: `/projects/statistics`,
+			});
+
+			const data = response.data.data;
+			const status = response.data.status;
+
+			if (status) {
+				result.data = data;
+				result.status = true;
+			} else {
+				result.data = data;
+			}
+
+			result.message = response.data.message;
+
+			return result;
+		} catch (error) {
+			console.log("> error in getStatistics", error);
+
+			return handleError(error, result);
+		}
+	}
+
+	
 }
 
 export const FINASAPI = new CoreFinasAPI();

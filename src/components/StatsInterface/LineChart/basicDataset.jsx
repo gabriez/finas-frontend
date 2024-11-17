@@ -1,9 +1,9 @@
 export const dataset = [
-    { x: 1, y: 2 },
-    { x: 2, y: 5.5 },
-    { x: 3, y: 2 },
-    { x: 5, y: 8.5 },
-    { x: 8, y: 1.5 },
-    { x: 10, y: 5 },
+    { Meses: "Mes 1", Finalizados: 2 },
+    { Meses: "Mes 2", Finalizados: 5.5 },
+    { Meses: "Mes 3", Finalizados: 2 },
+    { Meses: "Mes 4", Finalizados: 8.5 },
+    { Meses: "Mes 5", Finalizados: 1.5 },
+    { Meses: "Mes 6", Finalizados: 5 },
   ];
   

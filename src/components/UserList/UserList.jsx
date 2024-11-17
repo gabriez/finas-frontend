@@ -95,7 +95,7 @@ const UserList = () => {
 							<td></td>
 							<td className="py-10">
 								{loader ? (
-									<span className="loader"></span>
+									<span className="loader ml-{75%}"></span>
 								) : (
 									<span className=" text-right block ">No hay usuarios</span>
 								)}

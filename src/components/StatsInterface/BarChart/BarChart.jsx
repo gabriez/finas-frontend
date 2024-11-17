@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Box, Typography, Grid } from '@mui/material';
 import BorderLinearProgress from './BorderLinearProgress';
 
-const App = () => {
+const BarChart = ({dataSet}) => {
   const data = [
     { label: 'Andrés Bello', value: 20 },
     { label: 'Boconó', value: 60 },
@@ -13,15 +13,15 @@ const App = () => {
 
   return (
     <Box sx={{ width: '100%'}}>
-      {data.map((item) => (
-        <Grid container alignItems="center" spacing={2} key={item.label} sx={{ marginBottom: '0.5rem' }}>
+      {dataSet.map((item) => (
+        <Grid container alignItems="center" spacing={2} key={item.name} sx={{ marginBottom: '0.5rem' }}>
           <Grid item xs={3}>
             <Typography variant="h6" component="h2">
-              {item.label}
+              {item.name}
             </Typography>
           </Grid>
           <Grid item xs={8}>
-            <BorderLinearProgress variant="determinate" value={item.value} />
+            <BorderLinearProgress variant="determinate" value={item.chartValue} />
           </Grid>
           <Grid item xs={1}>
             <Typography variant="body2" color="textSecondary">
@@ -34,4 +34,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default BarChart;
