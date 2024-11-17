@@ -27,7 +27,7 @@ const ROUTES = {
 		USERS: "/home/users",
 		OFFICIALS: "/home/officials",
 		PROJECTS: "/home/projects",
-		SUPPORT: "/home/support",
+		BACKUP: "/home/backup",
 		RESTORE: "/home/restore",
 		STATISTICS: "/home/statistics",
     }
@@ -70,7 +70,7 @@ const router = createBrowserRouter([
 						element: <Proyectos/>
 					},
 					{
-						path: ROUTES.PRIVATE.SUPPORT,
+						path: ROUTES.PRIVATE.BACKUP,
 						element: <Respaldar/>
 					},
 					{

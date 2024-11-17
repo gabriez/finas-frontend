@@ -24,12 +24,12 @@ function StatsInterface() {
 				}
 			} catch (error) {
 				toast.error(res.message);
+			} finally {
+				setLoading(false);
 			}
-			setLoading(false);
 		};
 		getStatistics();
 	}, []);
-	console.log(municipiosData);
 
 	return (
 		<div className="flex max-w-7xl w-full flex-col items-center pb-4 pt-8 mx-auto">

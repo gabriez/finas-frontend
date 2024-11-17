@@ -412,7 +412,6 @@ class CoreFinasAPI {
 			message: "",
 			status: false,
 		};
-
 		try {
 			const response = await httpClient.get({
 				url: `/projects/statistics`,
@@ -429,16 +428,74 @@ class CoreFinasAPI {
 			}
 
 			result.message = response.data.message;
-
 			return result;
 		} catch (error) {
 			console.log("> error in getStatistics", error);
+			result.message = response.data.message;
+
+			return result;
+		}
+	}
+	async exportar(email, password) {
+		const result = {
+			data: null,
+			message: "",
+			status: false,
+		};
+
+		try {
+			const response = await httpClient.post({
+				url: `/database/export`,
+				body: { email, password },
+			});
+
+			const data = response.data.data;
+			const status = response.data.status;
+
+			if (status) {
+				result.data = data;
+				result.status = true;
+			} else {
+				result.data = data;
+			}
+
+			result.message = response.data.message;
+
+			return result;
+		} catch (error) {
+			console.log("> error in export", error);
 
 			return handleError(error, result);
 		}
 	}
 
-	
+	async importar(data) {
+		const result = {
+			data: null,
+			message: "",
+			status: false,
+		};
+
+		try {
+			const response = await httpClient.post({
+				url: `/database/import`,
+				body: { ...data },
+			});
+
+			if (response.data.status != undefined) {
+				result.message = response.data.message;
+				return result;
+			}
+			result.status = true;
+			result.data = response.data;
+
+			return result;
+		} catch (error) {
+			console.log("> error in import", error);
+
+			return handleError(error, result);
+		}
+	}
 }
 
 export const FINASAPI = new CoreFinasAPI();
