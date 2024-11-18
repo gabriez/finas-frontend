@@ -132,7 +132,7 @@ function RestoreInterface() {
 					</div>
 					<button
 						type="submit"
-						className=" bg-[#3CAC38] hover:bg-[#063A0A]  mx-auto text-white font-bold text-xl py-2 px-20 rounded focus:outline-none focus:shadow-outline hover:shadow-2xl">
+						className=" bg-[#3CAC38] hover:bg-[#063A0A]  mx-auto text-white font-bold text-xl py-2 px-5 rounded focus:outline-none focus:shadow-outline hover:shadow-2xl">
 						Respaldar
 					</button>
 				</div>

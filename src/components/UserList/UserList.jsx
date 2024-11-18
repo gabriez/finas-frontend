@@ -14,122 +14,125 @@ import UserModalForm from "./UserModalForm";
 Modal.setAppElement("#root");
 
 const UserList = () => {
-	const [showModal, setShowModal] = useState(false);
-	const [edit, setEdit] = useState(false);
-	const [loader, setLoader] = useState(false);
-	const [userEdit, setUserEdit] = useState({});
-	const [users, setUsers] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [loader, setLoader] = useState(false);
+  const [userEdit, setUserEdit] = useState({});
+  const [users, setUsers] = useState([]);
 
-	const handleModalOpen = () => {
-		setShowModal(true);
-	};
+  const handleModalOpen = () => {
+    setShowModal(true);
+  };
 
-	const handleModalClose = () => {
-		setShowModal(false);
-	};
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
 
-	useEffect(() => {
-		const getData = async () => {
-			try {
-				setLoader(true);
-				let result = await FINASAPI.getUsers("all");
-				setUsers(result.data);
-				setLoader(false);
-			} catch (error) {
-				setLoader(false);
-				console.log("error in UsersList > ", error);
-				toast.error("Ocurrio un error, recarga la pagina");
-			}
-		};
-		getData();
-	}, []);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        setLoader(true);
+        let result = await FINASAPI.getUsers("all");
+        setUsers(result.data);
+        setLoader(false);
+      } catch (error) {
+        setLoader(false);
+        console.log("error in UsersList > ", error);
+        toast.error("Ocurrio un error, recarga la pagina");
+      }
+    };
+    getData();
+  }, []);
 
-	return (
-		<div className="text-white flex flex-col min-h-screen items-center overflow-x-hidden py-4">
-			<div className="flex 2xl:w-[1600px] w-[90vw] items-center justify-between border-b-2 mb-4 pb-2 border-[#5df153]">
-				<h1 className="text-white text-[26px] sm:text-[30px] lg:text-[34px] 2xl:text-[40px] font-bold font-['Poppins']">
-					Lista de Usuarios
-				</h1>
-				<ButtonAdd
-					classNameCustom={" w-[160px] lg:w-[200px] 2xl:w-[244px] "}
-					icon={
-						<UserPlus className="w-6 h-6  2xl:w-10 2xl:h-10 relative" />
-					}
-					onClick={() => {
-						handleModalOpen();
-						setUserEdit({});
-						setEdit(false);
-					}}>
-					Añadir Usuario
-				</ButtonAdd>
-			</div>
-			<div className="overflow-x-auto 2xl:w-[1600px] w-[90vw] ">
-				<Table
-					classNameCustom={"2xl:w-[1600px] xl:w-[90vw] w-[1200px] mx-auto "}
-					dataMap={
-						users.length > 0 ? (
-							users.map((user, index) => (
-								<tr
-									key={index}
-									className="w-[1600px] border-t-2 border-[#eeeeee] text-sm lg:text-md 2xl:text-lg">
-									<td className="pl-20 py-6 2xl:py-10">
-										{user.nombre} {user.apellido}
-									</td>
-									<td>{user.email}</td>
-									<td>{user.username}</td>
-									<td>{user.role.rol}</td>
-									<td className="gap-9">
-										<button
-											className="mr-4"
-											onClick={() => {
-												setEdit(true);
-												setUserEdit(user);
-												handleModalOpen();
-											}}>
-											<IoCreateOutline size={40} />
-										</button>
-										{/* <button><TiDelete size={40} /></button> */}
-									</td>
-								</tr>
-							))
-						) : (
-							<tr>
-								<td></td>
-								<td className="py-10">
-									{loader ? (
-										<span className="loader ml-{75%}"></span>
-									) : (
-										<span className=" text-right block ">No hay usuarios</span>
-									)}
-								</td>
-								<td></td>
-								<td></td>
-							</tr>
-						)
-					}>
-					<tr className="text-[#063a0a] font-semibold font-['Poppins'] border-b-2 border-[#063a0a] text-[16px] 2xl:text-xl bg-[#bdd8bf] ">
-						<th className="xl:pl-20 pl-14 py-6">Nombre</th>
-						<th>Correo Electrónico</th>
-						<th>Usuario</th>
-						<th>Rol</th>
-						<th className="w-25"></th>
-					</tr>
-				</Table>
-			</div>
-			{/* <Pagination/> */}
-			<CustomModal
-				className="w-[85vw] md:w-[579px] h-[80vh] bg-white rounded-[30px] shadow overflow-x-hidden"
-				show={showModal}
-				onClose={handleModalClose}>
-				<UserModalForm
-					edit={edit}
-					user={userEdit}
-					handleModalClose={handleModalClose}
-					setAllUsers={setUsers}
-				/>
-			</CustomModal>
-		</div>
-	);
+  return (
+    <div className="text-white flex flex-col items-center overflow-x-hidden py-10">
+      <div className="flex 2xl:w-[1600px] w-[90vw] items-center justify-between border-b-2 mb-4 pb-2 border-[#5df153]">
+        <h1 className="text-white text-[26px] sm:text-[30px] lg:text-[34px] 2xl:text-[40px] font-bold font-['Poppins']">
+          Lista de Usuarios
+        </h1>
+        <ButtonAdd
+          classNameCustom={" w-[160px] lg:w-[200px] 2xl:w-[244px] "}
+          icon={<UserPlus className="w-6 h-6  2xl:w-10 2xl:h-10 relative" />}
+          onClick={() => {
+            handleModalOpen();
+            setUserEdit({});
+            setEdit(false);
+          }}
+        >
+          Añadir Usuario
+        </ButtonAdd>
+      </div>
+      <div className="overflow-x-auto 2xl:w-[1600px] w-[90vw] ">
+        <Table
+          classNameCustom={"2xl:w-[1600px] xl:w-[90vw] w-[1200px] mx-auto "}
+          dataMap={
+            users.length > 0 ? (
+              users.map((user, index) => (
+                <tr
+                  key={index}
+                  className="w-[1600px] border-t-2 border-[#eeeeee] text-sm lg:text-md 2xl:text-lg"
+                >
+                  <td className="pl-20 py-6 2xl:py-10">
+                    {user.nombre} {user.apellido}
+                  </td>
+                  <td>{user.email}</td>
+                  <td>{user.username}</td>
+                  <td>{user.role.rol}</td>
+                  <td className="gap-9">
+                    <button
+                      className="mr-4"
+                      onClick={() => {
+                        setEdit(true);
+                        setUserEdit(user);
+                        handleModalOpen();
+                      }}
+                    >
+                      <IoCreateOutline size={40} />
+                    </button>
+                    {/* <button><TiDelete size={40} /></button> */}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td></td>
+                <td className="py-10">
+                  {loader ? (
+                    <span className="loader ml-{75%}"></span>
+                  ) : (
+                    <span className=" text-right block ">No hay usuarios</span>
+                  )}
+                </td>
+                <td></td>
+                <td></td>
+              </tr>
+            )
+          }
+        >
+          <tr className="text-[#063a0a] font-semibold font-['Poppins'] border-b-2 border-[#063a0a] text-[16px] 2xl:text-xl bg-[#bdd8bf] ">
+            <th className="xl:pl-20 pl-14 py-6">Nombre</th>
+            <th>Correo Electrónico</th>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th className="w-25"></th>
+          </tr>
+        </Table>
+      </div>
+      {/* <Pagination/> */}
+      <CustomModal
+        className="w-[85vw] md:w-[579px] h-[87vh] bg-white rounded-[30px] shadow overflow-x-hidden"
+        show={showModal}
+        onClose={handleModalClose}
+      >
+        <UserModalForm
+          edit={edit}
+          user={userEdit}
+          handleModalClose={handleModalClose}
+          setAllUsers={setUsers}
+        />
+      </CustomModal>
+    </div>
+  );
 };
 
 export default UserList;

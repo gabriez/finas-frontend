@@ -235,7 +235,7 @@ const UserModalForm = ({
 
 					<button
 						type="submit"
-						className=" bg-[#3CAC38] hover:bg-[#063A0A] mx-[8rem] my-[2rem] text-white font-bold text-xl py-2 px-10 rounded focus:outline-none focus:shadow-outline hover:shadow-2xl">
+						className=" bg-[#3CAC38] hover:bg-[#063A0A] mx-auto my-[2rem] text-white font-bold text-xl py-2 px-10 rounded focus:outline-none focus:shadow-outline hover:shadow-2xl">
 						Guardar
 					</button>
 				</div>

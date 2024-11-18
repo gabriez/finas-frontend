@@ -236,7 +236,7 @@ const ProjectModalForm = ({
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
 				</div>
-				<h2 className="w-[100%] pl-9 text-4xl font-bold text-[#063A0A] pb-4">
+				<h2 className="w-[100%] md:pl-9 text-4xl font-bold text-[#063A0A] pb-4">
 					Ubicación
 				</h2>
 				<div className="mb-4 w-full md:w-[45%]">
@@ -389,7 +389,7 @@ const ProjectModalForm = ({
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
 				</div>
-				<h2 className="w-[100%] pl-9 text-4xl font-bold text-[#063A0A] pb-4">
+				<h2 className="w-[100%] md:pl-9 text-4xl font-bold text-[#063A0A] pb-4">
 					Funcionario
 				</h2>
 				<div className="mb-4 w-full md:w-[45%]">
@@ -419,7 +419,7 @@ const ProjectModalForm = ({
 						)}
 					</select>
 				</div>
-				<h2 className="w-[100%] pl-9 text-4xl font-bold text-[#063A0A] pb-4">
+				<h2 className="w-[100%] md:pl-9 text-4xl font-bold text-[#063A0A] pb-4">
 					Estatus
 				</h2>
 				<div className="mb-4 w-full md:w-[45%]">
@@ -494,7 +494,7 @@ const ProjectModalForm = ({
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
 				</div>
-				<div className="flex justify-between w-full items-center">
+				<div className="md:flex-row flex-col  gap-5 flex justify-between w-full items-center">
 					{showData && (
 						<label className="inline-flex flex-col cursor-pointer">
 							<span className="mb-2 font-medium text-gray-700">
@@ -523,7 +523,7 @@ const ProjectModalForm = ({
 						}>
 						{showData ? "Editar" : "Guardar"}
 					</button>
-					{showData && (
+					{showData && project.status == "Finalizado" &&(
 						<button
 							type="button"
 							className=" bg-[#3CAC38] hover:bg-[#063A0A]  text-white font-bold text-xl py-2 px-10 rounded focus:outline-none focus:shadow-outline hover:shadow-2xl">

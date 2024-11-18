@@ -45,7 +45,7 @@ const OfficialList = () => {
 	}, []);
 
 	return (
-		<div className="text-white flex flex-col justify-center min-h-screen items-center">
+		<div className="text-white flex flex-col justify-center py-[12rem] items-center">
 			<div className="flex 2xl:w-[1600px] w-[90vw] items-center justify-between border-b-2 mb-4 pb-2 border-[#5df153]">
 				<h1 className="text-white text-[26px] sm:text-[30px] lg:text-[34px] 2xl:text-[40px] font-bold font-['Poppins']">
 					Lista de Funcionarios
