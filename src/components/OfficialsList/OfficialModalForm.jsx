@@ -126,16 +126,16 @@ const OfficialModalForm = ({
 
 	return (
 		<>
-			<h2 className="w-[579px] p-9 bg-[#073d0b] rounded-tl-[15px] rounded-tr-[30px] shadow text-white text-4xl font-bold font-['Poppins'] text-center">
+			<h2 className="w-full p-5 md:p-7 lg:p-9 bg-[#073d0b] rounded-tl-[15px] rounded-tr-[15px] shadow text-white text-xl lg:text-2xl 2xl:text-4xl font-bold font-['Poppins'] text-center">
 				{edit ? "Editar" : "Añadir"} Funcionario
 			</h2>
 
 			<form
 				onSubmit={handleSubmit}
 				className=" flex flex-wrap gap-5 items-center content-center justify-center w-[100%]  bg-white p-8 rounded-lg ">
-				<div className="w-[410px] flex-col justify-start items-start gap-2.5 inline-flex">
+				<div className="w-full flex-col justify-start items-start gap-2.5 inline-flex">
 					<label
-						className="block text-gray-700 text-lg font-bold mt-2"
+						className="block text-gray-700 text-md lg:text-lg font-bold mt-2"
 						htmlFor="username">
 						Nombre de usuario
 					</label>
@@ -149,7 +149,7 @@ const OfficialModalForm = ({
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
 					<label
-						className="block text-gray-700 text-lg font-bold mt-2"
+						className="block text-gray-700 text-md lg:text-lg font-bold mt-2"
 						htmlFor="nombre">
 						Nombre
 					</label>
@@ -164,7 +164,7 @@ const OfficialModalForm = ({
 					/>
 
 					<label
-						className="block text-gray-700 text-lg font-bold mt-2"
+						className="block text-gray-700 text-md lg:text-lg font-bold mt-2"
 						htmlFor="apellido">
 						Apellido
 					</label>
@@ -179,7 +179,7 @@ const OfficialModalForm = ({
 					/>
 
 					<label
-						className="block text-gray-700 text-lg font-bold mt-2"
+						className="block text-gray-700 text-md lg:text-lg font-bold mt-2"
 						htmlFor="cedula">
 						Cédula de Identidad
 					</label>
@@ -194,7 +194,7 @@ const OfficialModalForm = ({
 					/>
 
 					<label
-						className="block text-gray-700 text-lg font-bold mt-2"
+						className="block text-gray-700 text-md lg:text-lg font-bold mt-2"
 						htmlFor="email">
 						Email:
 					</label>
@@ -209,7 +209,7 @@ const OfficialModalForm = ({
 					/>
 
 					<label
-						className="block text-gray-700 text-lg font-bold mt-2"
+						className="block text-gray-700 text-md lg:text-lg font-bold mt-2"
 						htmlFor="password">
 						Contraseña:
 					</label>
@@ -226,7 +226,7 @@ const OfficialModalForm = ({
 					/>
 
 					<label
-						className="block text-gray-700 text-lg font-bold mt-2"
+						className="block text-gray-700 text-md lg:text-lg font-bold mt-2"
 						htmlFor="phone">
 						Teléfono:
 					</label>

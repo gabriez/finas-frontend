@@ -46,13 +46,13 @@ const OfficialList = () => {
 
 	return (
 		<div className="text-white flex flex-col justify-center min-h-screen items-center">
-			<div className="flex 2xl:w-[1600px] w-[1200px] justify-between border-b-2 mb-4 pb-2 border-[#5df153]">
-				<h1 className="text-white text-[40px] font-bold font-['Poppins']">
+			<div className="flex 2xl:w-[1600px] w-[90vw] items-center justify-between border-b-2 mb-4 pb-2 border-[#5df153]">
+				<h1 className="text-white text-[26px] sm:text-[30px] lg:text-[34px] 2xl:text-[40px] font-bold font-['Poppins']">
 					Lista de Funcionarios
 				</h1>
 				<ButtonAdd
-					classNameCustom={" w-[244px] h-[59px]"}
-					icon={<UserPlus className="w-10 h-10 relative" />}
+					classNameCustom={" w-[160px] lg:w-[200px] 2xl:w-[244px] "}
+					icon={<UserPlus className="w-6 h-6 lg:w-7 lg:h-7 2xl:w-10 2xl:h-10 relative" />}
 					onClick={() => {
 						handleModalOpen();
 						setUserEdit({});
@@ -61,62 +61,66 @@ const OfficialList = () => {
 					Añadir Funcionarios
 				</ButtonAdd>
 			</div>
-			<Table
-				classNameCustom={" 2xl:w-[1600px] w-[1200px] "}
-				dataMap={
-					users.length > 0 ? (
-						users.map((user, index) => (
-							<tr
-								key={index}
-								className="w-[1600px] border-t-2 border-[#eeeeee]">
-								<td className="pl-20 py-10">
-									{user.nombre} {user.apellido}
-								</td>
-								<td>{user.cedula}</td>
-								<td>{user.email}</td>
-								<td>{user.phone}</td>
-								<td className="gap-9">
-									<button
-										className="mr-4"
-										onClick={() => {
-											setEdit(true);
-											setUserEdit(user);
-											handleModalOpen();
-										}}>
-										<IoCreateOutline size={40} />
-									</button>
-									{/* <button>
+			<div className="overflow-x-auto 2xl:w-[1600px] w-[90vw] ">
+				<Table
+					classNameCustom={"2xl:w-[1600px] xl:w-[90vw] w-[1200px] mx-auto "}
+					dataMap={
+						users.length > 0 ? (
+							users.map((user, index) => (
+								<tr
+									key={index}
+									className="w-[1600px] border-t-2 border-[#eeeeee] text-sm lg:text-md 2xl:text-lg">
+									<td className="pl-20 py-10">
+										{user.nombre} {user.apellido}
+									</td>
+									<td>{user.cedula}</td>
+									<td>{user.email}</td>
+									<td>{user.phone}</td>
+									<td className="gap-9">
+										<button
+											className="mr-4"
+											onClick={() => {
+												setEdit(true);
+												setUserEdit(user);
+												handleModalOpen();
+											}}>
+											<IoCreateOutline size={40} />
+										</button>
+										{/* <button>
 										<TiDelete size={40} />
 									</button> */}
+									</td>
+								</tr>
+							))
+						) : (
+							<tr>
+								<td></td>
+								<td className="py-10">
+									{loader ? (
+										<span className="loader ml-{75%}"></span>
+									) : (
+										<span className=" text-right block ">
+											No hay encargados
+										</span>
+									)}
 								</td>
+								<td></td>
+								<td></td>
 							</tr>
-						))
-					) : (
-						<tr>
-							<td></td>
-							<td className="py-10">
-								{loader ? (
-									<span className="loader ml-{75%}"></span>
-								) : (
-									<span className=" text-right block ">No hay encargados</span>
-								)}
-							</td>
-							<td></td>
-							<td></td>
-						</tr>
-					)
-				}>
-				<tr className="text-[#063a0a] text-2xl font-semibold font-['Poppins'] border-b-2 border-[#063a0a] bg-[#bdd8bf]">
-					<th className="pl-20">Nombre</th>
-					<th>Cedula de Identidad</th>
-					<th>Correo Electrónico</th>
-					<th>Teléfono</th>
-					<th className="w-25"></th>
-				</tr>
-			</Table>
+						)
+					}>
+					<tr className="text-[#063a0a] font-semibold font-['Poppins'] border-b-2 border-[#063a0a] text-[16px] 2xl:text-xl bg-[#bdd8bf] ">
+						<th className="xl:pl-20 pl-14 py-6">Nombre</th>
+						<th>Cedula de Identidad</th>
+						<th>Correo Electrónico</th>
+						<th>Teléfono</th>
+						<th className="w-25"></th>
+					</tr>
+				</Table>
+			</div>
 			{/* <Pagination /> */}
 			<CustomModal
-				className="w-[579px] h-[759px] overflow-y-scroll bg-white rounded-[30px]  shadow overflow-hidden"
+				className="w-[85vw] md:w-[579px] h-[80vh] overflow-y-scroll bg-white rounded-[30px]  shadow overflow-hidden"
 				show={showModal}
 				onClose={handleModalClose}>
 				<OfficialModalForm

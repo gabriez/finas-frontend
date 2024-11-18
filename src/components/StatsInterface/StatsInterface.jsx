@@ -33,8 +33,8 @@ function StatsInterface() {
 
 	return (
 		<div className="flex max-w-7xl w-full flex-col items-center pb-4 pt-8 mx-auto">
-			<div className="w-full mr-10 bg-white shadow-md rounded-xl py-6 px-10 mx-auto">
-				<h1 className="text-black md:text-[36px] mb-2 text-[40px] font-bold font-['Poppins'] pl-2">
+			<div className="w-[90vw] sm:w-[90vw]  xl:w-full bg-white shadow-md rounded-xl py-6 px-10 mx-auto">
+				<h1 className="text-black mb-2 xl:text-xl md:text-lg text-md font-bold font-['Poppins'] pl-2">
 					Estadística de Proyectos Mensual
 				</h1>
 				{loading ? (
@@ -48,9 +48,9 @@ function StatsInterface() {
 				)}
 			</div>
 
-			<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-10 mt-8">
+			<div className="w-[90vw] sm:w-[90vw]  xl:w-full grid grid-cols-1 md:grid-cols-2 gap-10 mt-8">
 				<div className="bg-white shadow-md rounded-xl px-10 py-6">
-					<h3 className="text-black md:text-[36px] mb-2 text-[40px] font-bold font-['Poppins']">
+					<h3 className="text-black mb-2 xl:text-xl md:text-lg text-md font-bold font-['Poppins']">
 						Proyectos por Municipio
 					</h3>
 					{loading ? (
@@ -65,7 +65,7 @@ function StatsInterface() {
 				</div>
 
 				<div className="bg-white shadow-md rounded-xl px-10 py-6">
-					<h3 className="text-black md:text-[36px] mb-2 text-[40px] font-bold font-['Poppins']">
+					<h3 className="text-black mb-2 xl:text-xl md:text-lg text-md font-bold font-['Poppins']">
 						Proyectos por Encargado
 					</h3>
 					{loading ? (

@@ -14,7 +14,7 @@ const Login = () => {
 		email: "",
 		password: "",
 	});
-	document.title = `${TITLE} - Inicio de sesión`
+	document.title = `${TITLE} - Inicio de sesión`;
 
 	const { setUserData } = useAuth();
 
@@ -44,12 +44,12 @@ const Login = () => {
 					email: result.data.user.email,
 					rol: result.data.user.rol,
 					endTime: exp,
-					id: result.data.user.id
+					id: result.data.user.id,
 				});
 				toast.success("Inició sesión exitosamente");
 				navigate(ROUTES.PRIVATE.INDEX);
 			} else {
-        console.log(result.data)
+				console.log(result.data);
 				toast.error(result.message);
 			}
 		} catch (error) {
@@ -82,16 +82,6 @@ const Login = () => {
 				</div>
 				<ButtonSubmit text="Iniciar Sesion" />
 			</form>
-			<button className="text-white pt-8 w-[100%]">
-				<Link href="#" to={ROUTES.PUBLIC.FORGOT} className="text-xl">
-					Has olvidado tu contraseña?
-				</Link>
-			</button>
-			<button className="text-white w-[100%]">
-				<Link href="#" to={ROUTES.PUBLIC.REGISTER} className="text-xl">
-					Registrarse
-				</Link>
-			</button>
 		</>
 	);
 };

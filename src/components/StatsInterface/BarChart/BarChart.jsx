@@ -16,8 +16,13 @@ const BarChart = ({dataSet}) => {
       {dataSet.map((item) => (
         <Grid container alignItems="center" spacing={2} key={item.name} sx={{ marginBottom: '0.5rem' }}>
           <Grid item xs={3}>
-            <Typography variant="h6" component="h2">
-              {item.name}
+            <Typography variant="h6" component="h2" className="capitalize" sx={{
+              fontSize: {
+                lg: '16px',
+                xs: '14px'
+              }
+            }} >
+              {item.name.toLowerCase()} 
             </Typography>
           </Grid>
           <Grid item xs={8}>

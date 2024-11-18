@@ -46,7 +46,7 @@ function RestoreInterface() {
 			};
 			let result = await FINASAPI.importar(data);
 			if (result.status) {
-        setDataForm({
+				setDataForm({
 					email: "",
 					password: "",
 				});
@@ -61,21 +61,21 @@ function RestoreInterface() {
 		}
 	};
 	return (
-		<div className="text-white flex flex-col justify-center min-h-screen pl-[8.5%]">
-			<div className="flex 2xl:w-[1125px] border-b-2 mb-4 pb-2 border-[#5df153]">
-				<h1 className="text-white text-[40px] font-bold font-['Poppins']">
+		<div className="text-white w-[80vw] flex flex-col justify-center pl-[8.5%] py-8">
+			<div className="flex w-full border-b-2 mb-4 pb-2 border-[#5df153]">
+				<h1 className="text-white text-[26px] sm:text-[30px] lg:text-[34px] 2xl:text-[40px] font-bold font-['Poppins']">
 					Restaurar la Base de Datos del Sistema
 				</h1>
 			</div>
 			<form
-				className="flex w-[992px] h-[420px] bg-white p-12  rounded-lg"
+				className="flex w-full  bg-white p-12  rounded-lg"
 				onSubmit={handleSubmit}>
 				<div className="w-full flex-col justify-start items-start gap-2.5 inline-flex">
-					<div className="w-[850px] flex gap-10 items-center pb-5">
+					<div className="w-full flex md:flex-row flex-col gap-2 md:gap-10 items-center pb-2 md:pb-5">
 						<label
-							className="w-[500px] text-gray-700 text-lg font-bold"
+							className="w-full md:w-[20%] text-gray-700 text-lg font-bold"
 							htmlFor="email">
-							Usuario
+							Email
 						</label>
 
 						<input
@@ -83,13 +83,13 @@ function RestoreInterface() {
 							onChange={handleChange}
 							type="text"
 							name="email"
-							placeholder="Ejemplo: “root”"
+							placeholder="Introduzca su email"
 							className="shadow appearance-none border rounded w-full py-3 px-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 						/>
 					</div>
-					<div className="w-[850px] flex gap-10 items-center pb-5">
+					<div className="w-full flex md:flex-row flex-col gap-2 md:gap-10 items-center pb-2 md:pb-5">
 						<label
-							className="w-[500px] text-gray-700 text-lg font-bold"
+							className="w-full md:w-[20%] text-gray-700 text-lg font-bold"
 							htmlFor="password">
 							Contraseña
 						</label>
@@ -104,11 +104,11 @@ function RestoreInterface() {
 						/>
 					</div>
 
-					<div className="w-[690px] flex gap-24 items-center">
+					<div className="w-full flex md:flex-row flex-col items-center pb-2 md:pb-5">
 						<label
-							className="w-[690px] flex gap-24 items-center text-gray-700 text-lg font-bold"
+							className="w-full items-center justify-start text-gray-700 text-lg font-bold flex md:flex-row flex-col gap-2 md:gap-10"
 							htmlFor="database">
-							Archivo
+							<span className="w-full md:w-[16%]">Archivo</span>
 							<button
 								htmlFor="database"
 								type="button"
@@ -116,7 +116,7 @@ function RestoreInterface() {
 									console.log(fileRef);
 									fileRef.current.click();
 								}}
-								className="z-0 bg-[#3CAC38] hover:bg-[#063A0A] w-full text-white font-bold text-xl py-3 px-10 rounded focus:outline-none focus:shadow-outline hover:shadow-2xl">
+								className="z-0 bg-[#3CAC38] hover:bg-[#063A0A] w-full  md:w-[80%] text-white font-bold text-xl py-3 px-10 rounded focus:outline-none focus:shadow-outline hover:shadow-2xl">
 								Importar archivo JSON
 								<AiOutlineImport className="w-[45px] h-[32px] inline" />
 							</button>
@@ -132,7 +132,7 @@ function RestoreInterface() {
 					</div>
 					<button
 						type="submit"
-						className=" bg-[#3CAC38] hover:bg-[#063A0A] mx-[22rem] my-[2rem] text-white font-bold text-xl py-2 px-20 rounded focus:outline-none focus:shadow-outline hover:shadow-2xl">
+						className=" bg-[#3CAC38] hover:bg-[#063A0A]  mx-auto text-white font-bold text-xl py-2 px-20 rounded focus:outline-none focus:shadow-outline hover:shadow-2xl">
 						Respaldar
 					</button>
 				</div>

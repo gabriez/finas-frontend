@@ -9,7 +9,7 @@ const PublicLayout = () => {
     return (
       // className="bg-[url('./imagenPrueba.jpg')] h-screen bg-cover w-[70%]"
       <main className="flex">
-        <div className="w-[70%]">
+        <div className="md:w-[50%] lg:w-[70%]">
           <img
             src={imagenPrueba}
             alt="imagen de construccion"
@@ -23,8 +23,8 @@ const PublicLayout = () => {
               alt="logo de finas"
               className="w-[60%] pb-5 mx-auto"
             />
-            <h1 className="text-6xl font-bold text-white pb-1">Hola de nuevo!</h1>
-            <h2 className="text-3xl text-left text-white pb-5 font-medium">
+            <h1 className="lg:text-3xl 2xl:text-6xl font-bold text-white pb-1">Hola de nuevo!</h1>
+            <h2 className="lg:text-xl 2xl:text-3xl text-left text-white pb-5 font-medium">
               {path === ROUTES.PUBLIC.INDEX
                 ? "Bienvenido de vuelta"
                 : path === ROUTES.PUBLIC.REGISTER

@@ -80,7 +80,7 @@ const ProjectList = () => {
 	const handleModalClose = () => {
 		setShowProject({});
 		setShowModal(false);
-		setShowData(false)
+		setShowData(false);
 	};
 
 	useEffect(() => {
@@ -119,77 +119,79 @@ const ProjectList = () => {
 	}, []);
 
 	return (
-		<div className="text-white flex flex-col justify-center min-h-screen items-center py-14">
-			<div className="flex 2xl:w-[1600px] w-[1200px] justify-between items-center border-b-2 mb-4 pb-2 border-[#5df153]">
-				<h1 className="text-white text-[40px] font-bold font-['Poppins']">
+		<div className="text-white flex flex-col justify-center min-h-screen items-center py-14 overflow-x-hidden">
+			<div className="flex 2xl:w-[1600px] w-[90vw] items-center justify-between border-b-2 mb-4 pb-2 border-[#5df153]">
+				<h1 className="text-white text-[26px] sm:text-[30px] lg:text-[34px] 2xl:text-[40px] font-bold font-['Poppins']">
 					Lista de Proyectos
 				</h1>
 				<ButtonAdd
-					classNameCustom={" w-[244px] h-[45px]"}
+					classNameCustom={" w-[160px] sm:w-[244px] "}
 					icon={<LuFilePlus2 className="w-5 h-5 relative" />}
 					onClick={handleModalOpen}>
 					Registrar Proyecto
 				</ButtonAdd>
 			</div>
-			<Table
-				classNameCustom={" 2xl:w-[1738px] w-[1200px] "}
-				dataMap={
-					Array.isArray(projects) && projects.length > 0 ? (
-						projects.map((project, index) => (
-							<tr
-								key={index}
-								className="w-[1600px] border-t-2 border-[#eeeeee]">
-								<td className="pl-20 py-10">{project.titulo}</td>
-								<td>{project.municipio}</td>
-								<td>{project.propuesta}</td>
-								<td>{formatDate(project.lapsoInicio)}</td>
-								<td>{formatDate(project.lapsoFin)}</td>
-								<td>{project.status}</td>
-								<td className="flex items-center h-[100px] justify-center">
-									<ButtonAdd
-										onClick={() => {
-											setShowProject(project);
-											handleModalOpen();
-											setShowData(true)
-										}}
-										classNameCustom={" w-[161px] h-[59px]"}
-										icon={<LuEye className="w-6 h-6" />}>
-										Ver Más
-									</ButtonAdd>
+			<div className="overflow-x-auto 2xl:w-[1600px] w-[90vw] ">
+				<Table
+					classNameCustom={"2xl:w-[1600px] xl:w-[90vw] w-[1200px] mx-auto "}
+					dataMap={
+						Array.isArray(projects) && projects.length > 0 ? (
+							projects.map((project, index) => (
+								<tr
+									key={index}
+									className="w-[1600px] border-t-2 border-[#eeeeee] text-sm lg:text-md 2xl:text-lg">
+									<td className="pl-20 py-10">{project.titulo}</td>
+									<td>{project.municipio}</td>
+									<td>{project.propuesta}</td>
+									<td>{formatDate(project.lapsoInicio)}</td>
+									<td>{formatDate(project.lapsoFin)}</td>
+									<td>{project.status}</td>
+									<td className="flex items-center h-[100px] justify-center">
+										<ButtonAdd
+											onClick={() => {
+												setShowProject(project);
+												handleModalOpen();
+												setShowData(true);
+											}}
+											classNameCustom={" w-[161px] h-[59px]"}
+											icon={<LuEye className="w-6 h-6" />}>
+											Ver Más
+										</ButtonAdd>
+									</td>
+								</tr>
+							))
+						) : (
+							<tr>
+								<td></td>
+								<td></td>
+								<td className="py-10">
+									{loader ? (
+										<span className="loader ml-{75%}"></span>
+									) : (
+										<span className=" text-right block ">No hay proyectos</span>
+									)}
 								</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
 							</tr>
-						))
-					) : (
-						<tr>
-							<td></td>
-							<td></td>
-							<td className="py-10">
-								{loader ? (
-									<span className="loader ml-{75%}"></span>
-								) : (
-									<span className=" text-right block ">No hay proyectos</span>
-								)}
-							</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-					)
-				}>
-				<tr className="text-[#063a0a] text-2xl font-semibold font-['Poppins'] border-b-2 border-[#063a0a] bg-[#bdd8bf]">
-					<th className="pl-20">Nombre</th>
-					<th>Municipio</th>
-					<th>Propuesta</th>
-					<th>Fecha de Inicio</th>
-					<th>Fecha de Cierre</th>
-					<th>Estatus</th>
-					<th className="w-26"></th>
-				</tr>
-			</Table>
+						)
+					}>
+					<tr className="text-[#063a0a] font-semibold font-['Poppins'] border-b-2 border-[#063a0a] text-[16px] 2xl:text-xl bg-[#bdd8bf] ">
+					<th className="xl:pl-20 pl-14 py-6">Nombre</th>
+						<th>Municipio</th>
+						<th>Propuesta</th>
+						<th>Fecha de Inicio</th>
+						<th>Fecha de Cierre</th>
+						<th>Estatus</th>
+						<th className="w-26"></th>
+					</tr>
+				</Table>
+			</div>
 			<Pagination />
 			<CustomModal
-				className="w-[50%] h-[90%] overflow-scroll overflow-x-hidden bg-white rounded-[30px] shadow "
+				className="w-[90%] md:w-[60%] lg:w-[50%] h-[90%] overflow-scroll overflow-x-hidden bg-white rounded-[30px] shadow "
 				show={showModal}
 				onClose={handleModalClose}>
 				<ProjectModalForm

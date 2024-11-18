@@ -86,6 +86,7 @@ const ProjectModalForm = ({
 					encargadoId: parseInt(formData.encargadoId),
 					anoAprob: parseInt(formData.anoAprob),
 				};
+
 				let result = await FINASAPI.editProjects(data, project.id);
 				if (result.status) {
 					toast.success("Edito el proyecto exitosamente");
@@ -162,14 +163,14 @@ const ProjectModalForm = ({
 
 	return (
 		<>
-			<h2 className="w-[50] p-9 bg-[#073d0b] rounded-tl-[15px] rounded-tr-[15px] shadow text-white text-4xl font-bold font-['Poppins'] text-center">
+			<h2 className="w-full p-5 md:p-7 lg:p-9 bg-[#073d0b] rounded-tl-[15px] rounded-tr-[8px] shadow text-white text-xl lg:text-2xl 2xl:text-4xl font-bold font-['Poppins'] text-center">
 				{showData ? (disable ? "Ver" : "Editar") : "Crear"} Proyecto
 			</h2>
 
 			<form
 				onSubmit={handleSubmit}
 				className=" flex flex-wrap gap-5 items-center content-center  w-[90%] bg-white p-10 mx-auto  justify-start rounded-lg ">
-				<div className="mb-4 w-[45%]">
+				<div className="mb-4 w-full md:w-[45%]">
 					<label
 						className="block text-gray-700 text-lg font-bold mb-2"
 						htmlFor="titulo">
@@ -186,7 +187,7 @@ const ProjectModalForm = ({
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
 				</div>
-				<div className="mb-4 w-[45%]">
+				<div className="mb-4 w-full md:w-[45%]">
 					<label
 						className="block text-gray-700 text-lg font-bold mb-2"
 						htmlFor="ente">
@@ -202,7 +203,7 @@ const ProjectModalForm = ({
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
 				</div>
-				<div className="mb-4 w-[45%]">
+				<div className="mb-4 w-full md:w-[45%]">
 					<label
 						className="block text-gray-700 text-lg font-bold mb-2"
 						htmlFor="propuesta">
@@ -218,7 +219,7 @@ const ProjectModalForm = ({
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
 				</div>
-				<div className="mb-4 w-[45%]">
+				<div className="mb-4 w-full md:w-[45%]">
 					<label
 						className="block text-gray-700 text-lg font-bold mb-2"
 						htmlFor="descripcion">
@@ -238,7 +239,7 @@ const ProjectModalForm = ({
 				<h2 className="w-[100%] pl-9 text-4xl font-bold text-[#063A0A] pb-4">
 					Ubicación
 				</h2>
-				<div className="mb-4 w-[45%]">
+				<div className="mb-4 w-full md:w-[45%]">
 					<label
 						className="block text-gray-700 text-lg font-bold mb-2"
 						htmlFor="municipio">
@@ -268,7 +269,7 @@ const ProjectModalForm = ({
 						)}
 					</select>
 				</div>
-				<div className="mb-4 w-[45%]">
+				<div className="mb-4 w-full md:w-[45%]">
 					<label
 						className="block text-gray-700 text-lg font-bold mb-2"
 						htmlFor="parroquia">
@@ -296,7 +297,7 @@ const ProjectModalForm = ({
 						)}
 					</select>
 				</div>
-				<div className="mb-4 w-[45%]">
+				<div className="mb-4 w-full md:w-[45%]">
 					<label
 						className="block text-gray-700 text-lg font-bold mb-2"
 						htmlFor="sector">
@@ -325,7 +326,7 @@ const ProjectModalForm = ({
 						)}
 					</select>
 				</div>
-				<div className="mb-4 w-[45%]">
+				<div className="mb-4 w-full md:w-[45%]">
 					<label
 						className="block text-gray-700 text-lg font-bold mb-2"
 						htmlFor="puntoDeReferencia">
@@ -340,7 +341,7 @@ const ProjectModalForm = ({
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
 				</div>
-				<div className="mb-4 w-[45%]">
+				<div className="mb-4 w-full md:w-[45%]">
 					<label
 						className="block text-gray-700 text-lg font-bold mb-2"
 						htmlFor="coordenadasLat">
@@ -356,7 +357,7 @@ const ProjectModalForm = ({
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
 				</div>
-				<div className="mb-4 w-[45%]">
+				<div className="mb-4 w-full md:w-[45%]">
 					<label
 						className="block text-gray-700 text-lg font-bold mb-2"
 						htmlFor="coordenadasLong">
@@ -372,7 +373,7 @@ const ProjectModalForm = ({
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
 				</div>
-				<div className="mb-4 w-[45%] justify-self-start">
+				<div className="mb-4 w-full md:w-[45%] justify-self-start">
 					<label
 						className="block text-gray-700 text-lg font-bold mb-2"
 						htmlFor="anoAprob">
@@ -391,7 +392,7 @@ const ProjectModalForm = ({
 				<h2 className="w-[100%] pl-9 text-4xl font-bold text-[#063A0A] pb-4">
 					Funcionario
 				</h2>
-				<div className="mb-4 w-[45%]">
+				<div className="mb-4 w-full md:w-[45%]">
 					<label
 						className="block text-gray-700 text-lg font-bold mb-2"
 						htmlFor="encargadoId">
@@ -421,7 +422,7 @@ const ProjectModalForm = ({
 				<h2 className="w-[100%] pl-9 text-4xl font-bold text-[#063A0A] pb-4">
 					Estatus
 				</h2>
-				<div className="mb-4 w-[45%]">
+				<div className="mb-4 w-full md:w-[45%]">
 					<label
 						className="block text-gray-700 text-lg font-bold mb-2"
 						htmlFor="status">
@@ -461,7 +462,7 @@ const ProjectModalForm = ({
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
 				</div>
-				<div className="mb-4  w-[45%]">
+				<div className="mb-4  w-full md:w-[45%]">
 					<label
 						className="block text-gray-700 text-lg font-bold mb-2"
 						htmlFor="lapsoInicio">
@@ -477,7 +478,7 @@ const ProjectModalForm = ({
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
 				</div>
-				<div className="mb-4 w-[45%]">
+				<div className="mb-4 w-full md:w-[45%]">
 					<label
 						className="block text-gray-700 text-lg font-bold mb-2"
 						htmlFor="lapsoFin">
@@ -501,10 +502,12 @@ const ProjectModalForm = ({
 							</span>
 							<input
 								type="checkbox"
-								value=""
+								checked={!disable}
 								className="sr-only peer"
-								onClick={() => {
-									setDisable((prevState) => !prevState);
+								onClick={(e) => {
+									if (project.status != "Finalizado") {
+										setDisable((prevState) => !prevState);
+									}
 								}}
 							/>
 							<div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:bg-[#3CAC38] dark:peer-focus:bg-[#063A0A] dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#3CAC38]"></div>
