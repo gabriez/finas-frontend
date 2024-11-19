@@ -28,7 +28,8 @@
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.23.1",
     "react-toastify": "^10.0.6",
-    "styled-components": "^6.1.13"
+    "styled-components": "^6.1.13",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

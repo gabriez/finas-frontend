@@ -2,6 +2,43 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { FINASAPI } from "../../lib/FinasApi";
 import { toast } from "react-toastify";
+import * as Yup from "yup";
+import InputUser from "./InputUser";
+
+const schemaUser = Yup.object({
+	username: Yup.string()
+		.min(3, "El tamaño mínimo es 3 carácteres")
+		.required("Campo requerido"),
+	nombre: Yup.string()
+		.min(3, "El tamaño mínimo es 3 carácteres")
+		.required("Campo requerido"),
+	apellido: Yup.string()
+		.min(3, "El tamaño mínimo es 3 carácteres")
+		.required("Campo requerido"),
+	email: Yup.string().email().required("Campo requerido"),
+	password: Yup.string()
+		.matches(
+			/^[a-zA-Z0-9]{3,30}$/,
+			"La contraseña necesita como mínimo 3 caracteres"
+		)
+		.required("Campo requerido"),
+	roleId: Yup.string().required("Campo requerido"),
+});
+
+const schemaEditUser = Yup.object({
+	username: Yup.string()
+		.min(3, "El tamaño mínimo es 3 carácteres")
+		.required("Campo requerido"),
+	nombre: Yup.string()
+		.min(3, "El tamaño mínimo es 3 carácteres")
+		.required("Campo requerido"),
+	apellido: Yup.string()
+		.min(3, "El tamaño mínimo es 3 carácteres")
+		.required("Campo requerido"),
+	email: Yup.string().email().required("Campo requerido"),
+
+	roleId: Yup.string().required("Campo requerido"),
+});
 
 const UserModalForm = ({
 	user,
@@ -19,6 +56,8 @@ const UserModalForm = ({
 		password: user.password ?? "",
 		roleId: user.roleId ?? "",
 	});
+
+	const [errors, setErrors] = useState({});
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -39,6 +78,19 @@ const UserModalForm = ({
 					email: formData.email,
 					roleId: formData.roleId,
 				};
+				try {
+					await schemaEditUser.validate(data, {
+						abortEarly: false,
+					});
+				} catch (err) {
+					const validationErrors = {};
+					err.inner.forEach((error) => {
+						if (error.path && !validationErrors[error.path]) {
+							validationErrors[error.path] = error.message;
+						}
+					});
+					setErrors(validationErrors);
+				}
 
 				if (Object.values(data).includes("")) {
 					toast.error("Ningun campo puede estar vacio");
@@ -56,7 +108,6 @@ const UserModalForm = ({
 					setAllUsers((prevState) => {
 						return prevState.map((item) => {
 							if (item.id == user.id) {
-								console.log(result.data);
 								return {
 									...item,
 									username: formData.username,
@@ -74,6 +125,20 @@ const UserModalForm = ({
 					toast.error(result.message);
 				}
 			} else {
+				try {
+					await schemaUser.validate(formData, {
+						abortEarly: false,
+					});
+				} catch (err) {
+					const validationErrors = {};
+					err.inner.forEach((error) => {
+						if (error.path && !validationErrors[error.path]) {
+							validationErrors[error.path] = error.message;
+						}
+					});
+					setErrors(validationErrors);
+				}
+
 				if (Object.values(formData).includes("")) {
 					toast.error("Ningun campo puede estar vacio");
 					return;
@@ -129,80 +194,54 @@ const UserModalForm = ({
 				onSubmit={handleSubmit}
 				className="flex flex-wrap gap-5 items-center content-center justify-center bg-white p-8  rounded-lg ">
 				<div className="w-full h-20 flex-col justify-start items-start gap-2.5 inline-flex">
-					<label
-						className="block text-gray-700 text-md lg:text-lg  font-bold mt-2"
-						htmlFor="username">
-						Nombre de usuario
-					</label>
-
-					<input
+					<InputUser
 						type="text"
 						name="username"
-						placeholder="Introduzca su username"
+						placeholder="Introduzca el nombre de usuario"
 						value={formData.username}
-						onChange={handleChange}
-						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+						handleChange={handleChange}
+						label="Nombre de usuario"
+						error={errors.username}
 					/>
 
-					<label
-						className="block text-gray-700 text-md lg:text-lg  font-bold mt-2"
-						htmlFor="nombre">
-						Nombre
-					</label>
-
-					<input
+					<InputUser
 						type="text"
 						name="nombre"
 						placeholder="Introduzca su nombre"
 						value={formData.nombre}
-						onChange={handleChange}
-						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+						handleChange={handleChange}
+						label="Nombre"
+						error={errors.nombre}
 					/>
 
-					<label
-						className="block text-gray-700 text-md lg:text-lg  font-bold mt-2"
-						htmlFor="apellido">
-						Apellido
-					</label>
-
-					<input
+					<InputUser
 						type="text"
 						name="apellido"
 						placeholder="Introduzca su apellido"
 						value={formData.apellido}
-						onChange={handleChange}
-						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+						handleChange={handleChange}
+						label="Apellido"
+						error={errors.apellido}
 					/>
 
-					<label
-						className="block text-gray-700 text-md lg:text-lg  font-bold mt-2"
-						htmlFor="email">
-						Email:
-					</label>
-
-					<input
+					<InputUser
 						type="email"
 						name="email"
 						placeholder="ejemplo@hotmail.com"
 						value={formData.email}
-						onChange={handleChange}
-						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+						handleChange={handleChange}
+						label="Email:"
+						error={errors.email}
 					/>
 
-					<label
-						className="block text-gray-700 text-md lg:text-lg  font-bold mt-2"
-						htmlFor="password">
-						Contraseña:
-					</label>
-
-					<input
+					<InputUser
 						type="password"
 						name="password"
-						id="password"
 						placeholder="XXXXXXXX"
 						value={formData.password}
-						onChange={handleChange}
-						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+						handleChange={handleChange}
+						label="Contraseña:"
+						error={errors.password}
 					/>
 
 					<label
@@ -232,6 +271,9 @@ const UserModalForm = ({
 								</option>
 							))}
 					</select>
+
+					{errors.roleId?.length > 0 && <span className="bg-red-500 text-white text-md py-1 px-2 rounded-md"> {errors.roleId} </span>}
+
 
 					<button
 						type="submit"
