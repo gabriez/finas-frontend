@@ -278,6 +278,37 @@ class CoreFinasAPI {
 		}
 	}
 
+	async getReport(id) {
+		const result = {
+			data: null,
+			message: "",
+			status: false,
+		};
+
+		try {
+			const response = await httpClient.get({
+				url: `/projects/report/${id}`,
+			},
+			{
+				responseType: "arraybuffer"
+			}
+		);
+
+			if (response.data.status != undefined) {
+				result.message = response.data.message;
+				return result;
+			}
+			result.status = true;
+			result.data = response.data;
+
+			return result;
+		} catch (error) {
+			console.log("> error in getReport", error);
+
+			return handleError(error, result);
+		}
+	}
+
 	async getStates() {
 		const result = {
 			data: null,

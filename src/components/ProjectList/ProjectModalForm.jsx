@@ -3,32 +3,48 @@ import { FINASAPI } from "../../lib/FinasApi";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthProvider";
 import { formatInputDate } from "../helpers/lib";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 
 const schemaProject = Yup.object({
-	titulo: Yup.string().min('Necesita como mínimo 5 carácteres').required("Es un campo requerido"),
-		descripcion: Yup.string().min('Necesita como mínimo 5 carácteres').required("Es un campo requerido"),
-		encargadoId: Yup.number().required("Es un campo requerido"),
-		userId: Yup.number().required("Es un campo requerido"),
-		municipioId: Yup.string().required("Es un campo requerido"),
-		municipio: Yup.string().required("Es un campo requerido"),
-		parroquiaId: Yup.string().required("Es un campo requerido"),
-		parroquia: Yup.string().required("Es un campo requerido"),
-		sectorId: Yup.string().required("Es un campo requerido"),
-		sector: Yup.string().required("Es un campo requerido"),
-		puntoDeReferencia: Yup.string().min('Necesita como mínimo 10 carácteres').required("Es un campo requerido"),
-		coordenadasLat: Yup.string().min('Necesita como mínimo 5 carácteres').required("Es un campo requerido"),
-		coordenadasLong: Yup.string().min('Necesita como mínimo 5 carácteres').required("Es un campo requerido"),
-		anoAprob: Yup.number().min(2000, "Fecha minima 2000").required("Es un campo requerido"),
-		propuesta: Yup.string().min('Necesita como mínimo 5 carácteres').required("Es un campo requerido"),
-		status: Yup.string().required("Es un campo requerido"),
-		observacion: Yup.string().min('Necesita como mínimo 5 carácteres').required("Es un campo requerido"),
-		lapsoInicio: Yup.string().required("Es un campo requerido"),
-		lapsoFin: Yup.string().required("Es un campo requerido"),
-		ente: Yup.string().min('Necesita como mínimo 2 carácteres').required("Es un campo requerido"),
-})
-
-
+	titulo: Yup.string()
+		.min("Necesita como mínimo 5 carácteres")
+		.required("Es un campo requerido"),
+	descripcion: Yup.string()
+		.min("Necesita como mínimo 5 carácteres")
+		.required("Es un campo requerido"),
+	encargadoId: Yup.number().required("Es un campo requerido"),
+	userId: Yup.number().required("Es un campo requerido"),
+	municipioId: Yup.string().required("Es un campo requerido"),
+	municipio: Yup.string().required("Es un campo requerido"),
+	parroquiaId: Yup.string().required("Es un campo requerido"),
+	parroquia: Yup.string().required("Es un campo requerido"),
+	sectorId: Yup.string().required("Es un campo requerido"),
+	sector: Yup.string().required("Es un campo requerido"),
+	puntoDeReferencia: Yup.string()
+		.min("Necesita como mínimo 10 carácteres")
+		.required("Es un campo requerido"),
+	coordenadasLat: Yup.string()
+		.min("Necesita como mínimo 5 carácteres")
+		.required("Es un campo requerido"),
+	coordenadasLong: Yup.string()
+		.min("Necesita como mínimo 5 carácteres")
+		.required("Es un campo requerido"),
+	anoAprob: Yup.number()
+		.min(2000, "Fecha minima 2000")
+		.required("Es un campo requerido"),
+	propuesta: Yup.string()
+		.min("Necesita como mínimo 5 carácteres")
+		.required("Es un campo requerido"),
+	status: Yup.string().required("Es un campo requerido"),
+	observacion: Yup.string()
+		.min("Necesita como mínimo 5 carácteres")
+		.required("Es un campo requerido"),
+	lapsoInicio: Yup.string().required("Es un campo requerido"),
+	lapsoFin: Yup.string().required("Es un campo requerido"),
+	ente: Yup.string()
+		.min("Necesita como mínimo 2 carácteres")
+		.required("Es un campo requerido"),
+});
 
 const ProjectModalForm = ({
 	showData = false,
@@ -46,7 +62,7 @@ const ProjectModalForm = ({
 		parroquia: false,
 	});
 	const [disable, setDisable] = useState(true);
-	const [errors, setErrors] = useState({})
+	const [errors, setErrors] = useState({});
 	const { userData } = useAuth();
 
 	const [formData, setFormData] = useState({
@@ -548,9 +564,34 @@ const ProjectModalForm = ({
 						}>
 						{showData ? "Editar" : "Guardar"}
 					</button>
-					{showData && project.status == "Finalizado" &&(
+					{showData && project.status == "Finalizado" && (
 						<button
 							type="button"
+							onClick={async () => {
+								try {
+									let result = await FINASAPI.getReport(project.id);
+									if (result.status) {
+										// Create a Blob with the JSON data and specify the MIME type
+										console.log('API Response:', result);
+										const byteArray = Object.values(result.data); // Convert to array of bytes
+										const pdfBuffer = new Uint8Array(byteArray); 
+										const blob = new Blob([pdfBuffer], {
+											type: "application/pdf",
+										});
+										const url = window.URL.createObjectURL(blob);
+										const link = document.createElement("a");
+										link.href = url;
+										link.download = "report.pdf";
+										link.click();
+										window.URL.revokeObjectURL(url);
+									} else {
+										console.log(result.data);
+										toast.error(result.message);
+									}
+								} catch (err) {
+									console.log("print project", err);
+								}
+							}}
 							className=" bg-[#3CAC38] hover:bg-[#063A0A]  text-white font-bold text-xl py-2 px-10 rounded focus:outline-none focus:shadow-outline hover:shadow-2xl">
 							Imprimir PDF
 						</button>
