@@ -3,6 +3,32 @@ import { FINASAPI } from "../../lib/FinasApi";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthProvider";
 import { formatInputDate } from "../helpers/lib";
+import * as Yup from 'yup';
+
+const schemaProject = Yup.object({
+	titulo: Yup.string().min('Necesita como mínimo 5 carácteres').required("Es un campo requerido"),
+		descripcion: Yup.string().min('Necesita como mínimo 5 carácteres').required("Es un campo requerido"),
+		encargadoId: Yup.number().required("Es un campo requerido"),
+		userId: Yup.number().required("Es un campo requerido"),
+		municipioId: Yup.string().required("Es un campo requerido"),
+		municipio: Yup.string().required("Es un campo requerido"),
+		parroquiaId: Yup.string().required("Es un campo requerido"),
+		parroquia: Yup.string().required("Es un campo requerido"),
+		sectorId: Yup.string().required("Es un campo requerido"),
+		sector: Yup.string().required("Es un campo requerido"),
+		puntoDeReferencia: Yup.string().min('Necesita como mínimo 10 carácteres').required("Es un campo requerido"),
+		coordenadasLat: Yup.string().min('Necesita como mínimo 5 carácteres').required("Es un campo requerido"),
+		coordenadasLong: Yup.string().min('Necesita como mínimo 5 carácteres').required("Es un campo requerido"),
+		anoAprob: Yup.number().min(2000, "Fecha minima 2000").required("Es un campo requerido"),
+		propuesta: Yup.string().min('Necesita como mínimo 5 carácteres').required("Es un campo requerido"),
+		status: Yup.string().required("Es un campo requerido"),
+		observacion: Yup.string().min('Necesita como mínimo 5 carácteres').required("Es un campo requerido"),
+		lapsoInicio: Yup.string().required("Es un campo requerido"),
+		lapsoFin: Yup.string().required("Es un campo requerido"),
+		ente: Yup.string().min('Necesita como mínimo 2 carácteres').required("Es un campo requerido"),
+})
+
+
 
 const ProjectModalForm = ({
 	showData = false,
@@ -20,6 +46,7 @@ const ProjectModalForm = ({
 		parroquia: false,
 	});
 	const [disable, setDisable] = useState(true);
+	const [errors, setErrors] = useState({})
 	const { userData } = useAuth();
 
 	const [formData, setFormData] = useState({
@@ -27,7 +54,6 @@ const ProjectModalForm = ({
 		descripcion: project.descripcion ?? "",
 		encargadoId: project.encargadoId ?? 0,
 		userId: project.userId ?? userData.id,
-		// enteEmail: project.enteEmail ?? "",
 		municipioId: project.municipioId ?? "",
 		municipio: project.municipio ?? "",
 		parroquiaId: project.parroquiaId ?? "",
@@ -46,7 +72,6 @@ const ProjectModalForm = ({
 			: "",
 		lapsoFin: project.lapsoFin ? formatInputDate(project.lapsoFin) : "",
 		ente: project.ente ?? "",
-		// entePhone: project.entePhone ?? "",
 	});
 
 	const handleChange = (e) => {
@@ -380,7 +405,7 @@ const ProjectModalForm = ({
 						Año de Aprobacion
 					</label>
 					<input
-						type="text"
+						type="number"
 						name="anoAprob"
 						placeholder="Introduzca el año de aprobacion"
 						disabled={showData && disable}
