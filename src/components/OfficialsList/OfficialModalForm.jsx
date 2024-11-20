@@ -113,6 +113,8 @@ const OfficialModalForm = ({
 					data.password = formData.password;
 				}
 
+				data.roleId = role;
+
 				let result = await FINASAPI.patchUsers(user.id, data);
 
 				if (result.status) {
