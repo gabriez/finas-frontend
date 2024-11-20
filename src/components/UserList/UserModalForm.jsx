@@ -90,6 +90,7 @@ const UserModalForm = ({
 						}
 					});
 					setErrors(validationErrors);
+					return;
 				}
 
 				if (Object.values(data).includes("")) {
@@ -137,6 +138,7 @@ const UserModalForm = ({
 						}
 					});
 					setErrors(validationErrors);
+					return;
 				}
 
 				if (Object.values(formData).includes("")) {
