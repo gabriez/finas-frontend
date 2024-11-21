@@ -2,14 +2,27 @@ import { useState } from "react";
 import { TITLE } from "../../constants";
 import { FINASAPI } from "../../lib/FinasApi";
 import { toast } from "react-toastify";
+import * as Yup from "yup";
+
+const schemaBackup = Yup.object({
+	email: Yup.string().email().required("Campo requerido"),
+	password: Yup.string()
+	  .matches(
+		/^[a-zA-Z0-9]{3,30}$/,
+		"La contraseña necesita como mínimo 3 caracteres"
+	  )
+	  .required("Campo requerido"),
+  });
+  
 
 const Respaldar = () => {
 	document.title = `${TITLE} - Respaldar`;
-
+	const [errors, setErrors] = useState({});
 	const [data, setData] = useState({
 		email: "",
 		password: "",
 	});
+
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -20,6 +33,21 @@ const Respaldar = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		try {
+			await schemaBackup.validate(data, {
+			  abortEarly: false,
+			});
+		  } catch (err) {
+			const validationErrors = {};
+			err.inner.forEach((error) => {
+			  if (error.path && !validationErrors[error.path]) {
+				validationErrors[error.path] = error.message;
+			  }
+			});
+			setErrors(validationErrors);
+	  
+			return;
+		}
 		try {
 			let result = await FINASAPI.exportar(data.email, data.password);
 			console.log(result);
@@ -68,15 +96,21 @@ const Respaldar = () => {
 							htmlFor="email">
 							Email
 						</label>
-
+					<div className="w-full space-y-2">
 						<input
 							type="text"
 							name="email"
+							placeholder="Introduzca su email"
 							onChange={handleChange}
 							value={data.email}
-							placeholder="Introduzca su email"
 							className="shadow appearance-none border rounded w-full py-3 px-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 						/>
+						{errors?.email?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.email}
+							</span>
+						)}
+					</div>
 					</div>
 					<div className="w-full flex md:flex-row flex-col gap-2 md:gap-10 items-center pb-2 md:pb-5">
 						<label
@@ -84,7 +118,7 @@ const Respaldar = () => {
 							htmlFor="password">
 							Contraseña
 						</label>
-
+					<div className="w-full space-y-2">
 						<input
 							type="password"
 							name="password"
@@ -93,6 +127,13 @@ const Respaldar = () => {
 							placeholder="Introduzca su contraseña"
 							className="shadow appearance-none border rounded w-full py-3 px-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 						/>
+						{errors?.password?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{" "}
+							{errors.password}
+							</span>
+						)}
+					</div>
 					</div>
 
 					<button

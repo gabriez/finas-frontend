@@ -7,12 +7,14 @@ import * as Yup from "yup";
 
 const schemaProject = Yup.object({
 	titulo: Yup.string()
-		.min("Necesita como mínimo 5 carácteres")
+		.min(5, "Necesita como mínimo 5 carácteres")
 		.required("Es un campo requerido"),
 	descripcion: Yup.string()
-		.min("Necesita como mínimo 5 carácteres")
+		.min(5, "Necesita como mínimo 5 carácteres")
 		.required("Es un campo requerido"),
-	encargadoId: Yup.number().required("Es un campo requerido"),
+	encargadoId: Yup.number()
+	.typeError("Debe haber un encargado")
+	.required("Es un campo requerido"),
 	userId: Yup.number().required("Es un campo requerido"),
 	municipioId: Yup.string().required("Es un campo requerido"),
 	municipio: Yup.string().required("Es un campo requerido"),
@@ -21,30 +23,33 @@ const schemaProject = Yup.object({
 	sectorId: Yup.string().required("Es un campo requerido"),
 	sector: Yup.string().required("Es un campo requerido"),
 	puntoDeReferencia: Yup.string()
-		.min("Necesita como mínimo 10 carácteres")
+		.min(10, "Necesita como mínimo 10 carácteres")
 		.required("Es un campo requerido"),
 	coordenadasLat: Yup.string()
-		.min("Necesita como mínimo 5 carácteres")
+		.min(5, "Necesita como mínimo 5 carácteres")
 		.required("Es un campo requerido"),
 	coordenadasLong: Yup.string()
-		.min("Necesita como mínimo 5 carácteres")
+		.min(5, "Necesita como mínimo 5 carácteres")
 		.required("Es un campo requerido"),
 	anoAprob: Yup.number()
+		.typeError("Debe ser un número")
 		.min(2000, "Fecha minima 2000")
 		.required("Es un campo requerido"),
 	propuesta: Yup.string()
-		.min("Necesita como mínimo 5 carácteres")
+		.min(5, "Necesita como mínimo 5 carácteres")
 		.required("Es un campo requerido"),
 	status: Yup.string().required("Es un campo requerido"),
 	observacion: Yup.string()
-		.min("Necesita como mínimo 5 carácteres")
+		.min(5, "Necesita como mínimo 5 carácteres")
 		.required("Es un campo requerido"),
 	lapsoInicio: Yup.string().required("Es un campo requerido"),
 	lapsoFin: Yup.string().required("Es un campo requerido"),
 	ente: Yup.string()
-		.min("Necesita como mínimo 2 carácteres")
+		.min(2, "Necesita como mínimo 2 carácteres")
 		.required("Es un campo requerido"),
 });
+
+const schemaEditProject = schemaProject;
 
 const ProjectModalForm = ({
 	showData = false,
@@ -102,7 +107,9 @@ const ProjectModalForm = ({
 					[`${name}Id`]: newValues[0],
 				};
 			}
-			return { ...prevState, [name]: value };
+			return {
+				...prevState,
+				[name]: name === 'anoAprob' ? (value === '' ? '' : parseInt(value)) : value };
 		});
 		if (locationRegex.test(name)) {
 			setChangeLocations((prevState) => {
@@ -112,10 +119,29 @@ const ProjectModalForm = ({
 				};
 			});
 		}
+		
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		try {
+			const schema = showData ? schemaEditProject : schemaProject;
+			await schema.validate( {...formData,
+				encargadoId: parseInt(formData.encargadoId),
+				anoAprob: parseInt(formData.anoAprob),}, {
+				abortEarly: false,
+			});
+			setErrors({});
+		} catch (err) {
+			const validationErrors = {};
+			err.inner.forEach((error) => {
+				if (error.path && !validationErrors[error.path]) {
+					validationErrors[error.path] = error.message;
+				}
+			});
+			setErrors(validationErrors);
+			return;
+		}
 		try {
 			if (showData) {
 				if (Object.values(formData).includes("")) {
@@ -217,6 +243,7 @@ const ProjectModalForm = ({
 						htmlFor="titulo">
 						Nombre del Proyecto
 					</label>
+				<div className="w-full space-y-2">
 					<input
 						type="text"
 						name="titulo"
@@ -227,6 +254,12 @@ const ProjectModalForm = ({
 						disabled={showData && disable}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
+					{errors?.titulo?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.titulo}
+							</span>
+						)}
+				</div>
 				</div>
 				<div className="mb-4 w-full md:w-[45%]">
 					<label
@@ -234,6 +267,7 @@ const ProjectModalForm = ({
 						htmlFor="ente">
 						Ente
 					</label>
+				<div className="w-full space-y-2">
 					<input
 						type="text"
 						name="ente"
@@ -243,6 +277,12 @@ const ProjectModalForm = ({
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
+					{errors?.ente?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.ente}
+							</span>
+						)}
+				</div>
 				</div>
 				<div className="mb-4 w-full md:w-[45%]">
 					<label
@@ -250,6 +290,7 @@ const ProjectModalForm = ({
 						htmlFor="propuesta">
 						Propuesta
 					</label>
+				<div className="w-full space-y-2">
 					<input
 						type="text"
 						name="propuesta"
@@ -259,6 +300,12 @@ const ProjectModalForm = ({
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
+					{errors?.propuesta?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.propuesta}
+							</span>
+						)}
+					</div>
 				</div>
 				<div className="mb-4 w-full md:w-[45%]">
 					<label
@@ -266,6 +313,7 @@ const ProjectModalForm = ({
 						htmlFor="descripcion">
 						Descripción
 					</label>
+				<div className="w-full space-y-2">
 					<input
 						type="text"
 						id="descripcion"
@@ -276,6 +324,12 @@ const ProjectModalForm = ({
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
+					{errors?.descripcion?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.descripcion}
+							</span>
+						)}
+				</div>
 				</div>
 				<h2 className="w-[100%] md:pl-9 text-4xl font-bold text-[#063A0A] pb-4">
 					Ubicación
@@ -286,6 +340,7 @@ const ProjectModalForm = ({
 						htmlFor="municipio">
 						Municipio
 					</label>
+					<div className="w-full space-y-2">
 					<select
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 						name="municipio"
@@ -309,6 +364,12 @@ const ProjectModalForm = ({
 							<option value="">Cargando...</option>
 						)}
 					</select>
+					{errors?.municipio?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.municipio}
+							</span>
+						)}
+				</div>
 				</div>
 				<div className="mb-4 w-full md:w-[45%]">
 					<label
@@ -316,6 +377,7 @@ const ProjectModalForm = ({
 						htmlFor="parroquia">
 						Parroquia
 					</label>
+				<div className="w-full space-y-2">
 					<select
 						name="parroquia"
 						onChange={handleChange}
@@ -337,6 +399,12 @@ const ProjectModalForm = ({
 							<option value="">Cargando...</option>
 						)}
 					</select>
+					{errors?.parroquia?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.parroquia}
+							</span>
+						)}
+				</div>
 				</div>
 				<div className="mb-4 w-full md:w-[45%]">
 					<label
@@ -344,6 +412,7 @@ const ProjectModalForm = ({
 						htmlFor="sector">
 						Sector
 					</label>
+				<div className="w-full space-y-2">
 					<select
 						type="sector"
 						name="sector"
@@ -366,6 +435,12 @@ const ProjectModalForm = ({
 							<option value="">Cargando...</option>
 						)}
 					</select>
+					{errors?.comunidad?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.comunidad}
+							</span>
+						)}
+				</div>
 				</div>
 				<div className="mb-4 w-full md:w-[45%]">
 					<label
@@ -373,6 +448,7 @@ const ProjectModalForm = ({
 						htmlFor="puntoDeReferencia">
 						Punto de referencia
 					</label>
+				<div className="w-full space-y-2">
 					<textarea
 						name="puntoDeReferencia"
 						placeholder="Introduzca un punto de referencia"
@@ -381,6 +457,12 @@ const ProjectModalForm = ({
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
+					{errors?.puntoDeReferencia?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.puntoDeReferencia}
+							</span>
+						)}
+				</div>
 				</div>
 				<div className="mb-4 w-full md:w-[45%]">
 					<label
@@ -388,6 +470,7 @@ const ProjectModalForm = ({
 						htmlFor="coordenadasLat">
 						Coordenadas Latitud
 					</label>
+				<div className="w-full space-y-2">
 					<input
 						type="text"
 						name="coordenadasLat"
@@ -397,6 +480,12 @@ const ProjectModalForm = ({
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
+					{errors?.coordenadasLat?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.coordenadasLat}
+							</span>
+						)}
+				</div>
 				</div>
 				<div className="mb-4 w-full md:w-[45%]">
 					<label
@@ -404,6 +493,7 @@ const ProjectModalForm = ({
 						htmlFor="coordenadasLong">
 						Coordenadas Longitud
 					</label>
+				<div className="w-full space-y-2">
 					<input
 						type="text"
 						name="coordenadasLong"
@@ -413,6 +503,12 @@ const ProjectModalForm = ({
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
+					{errors?.coordenadasLong?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.coordenadasLong}
+							</span>
+						)}
+				</div>
 				</div>
 				<div className="mb-4 w-full md:w-[45%] justify-self-start">
 					<label
@@ -420,6 +516,7 @@ const ProjectModalForm = ({
 						htmlFor="anoAprob">
 						Año de Aprobacion
 					</label>
+				<div className="w-full space-y-2">
 					<input
 						type="number"
 						name="anoAprob"
@@ -429,6 +526,12 @@ const ProjectModalForm = ({
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
+					{errors?.anoAprob?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.anoAprob}
+							</span>
+						)}
+				</div>
 				</div>
 				<h2 className="w-[100%] md:pl-9 text-4xl font-bold text-[#063A0A] pb-4">
 					Funcionario
@@ -439,6 +542,7 @@ const ProjectModalForm = ({
 						htmlFor="encargadoId">
 						Funcionario Encargado
 					</label>
+				<div className="w-full space-y-2">
 					<select
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 						name="encargadoId"
@@ -459,6 +563,12 @@ const ProjectModalForm = ({
 							<option value="">Cargando...</option>
 						)}
 					</select>
+					{errors?.encargadoId?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.encargadoId}
+							</span>
+						)}
+				</div>
 				</div>
 				<h2 className="w-[100%] md:pl-9 text-4xl font-bold text-[#063A0A] pb-4">
 					Estatus
@@ -469,6 +579,7 @@ const ProjectModalForm = ({
 						htmlFor="status">
 						Estatus
 					</label>
+				<div className="w-full space-y-2">
 					<select
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 						name="status"
@@ -487,6 +598,12 @@ const ProjectModalForm = ({
 							<option value="">Cargando...</option>
 						)}
 					</select>
+					{errors?.status?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.status}
+							</span>
+						)}
+				</div>
 				</div>
 				<div className="mb-4 w-[92%]">
 					<label
@@ -494,6 +611,7 @@ const ProjectModalForm = ({
 						htmlFor="message">
 						Observacion
 					</label>
+				<div className="w-full space-y-2">
 					<textarea
 						name="observacion"
 						placeholder="Introduzca la Observacion"
@@ -502,6 +620,12 @@ const ProjectModalForm = ({
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
+					{errors?.observacion?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.observacion}
+							</span>
+						)}
+				</div>
 				</div>
 				<div className="mb-4  w-full md:w-[45%]">
 					<label
@@ -509,6 +633,7 @@ const ProjectModalForm = ({
 						htmlFor="lapsoInicio">
 						Lapso Inicio
 					</label>
+				<div className="w-full space-y-2">
 					<input
 						type="date"
 						name="lapsoInicio"
@@ -518,6 +643,12 @@ const ProjectModalForm = ({
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
+					{errors?.lapsoInicio?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.lapsoInicio}
+							</span>
+						)}
+				</div>
 				</div>
 				<div className="mb-4 w-full md:w-[45%]">
 					<label
@@ -525,6 +656,7 @@ const ProjectModalForm = ({
 						htmlFor="lapsoFin">
 						Lapso Final
 					</label>
+				<div className="w-full space-y-2">
 					<input
 						type="date"
 						name="lapsoFin"
@@ -534,6 +666,12 @@ const ProjectModalForm = ({
 						onChange={handleChange}
 						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					/>
+					{errors?.lapsoFin?.length > 0 && (
+							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
+							{errors.lapsoFin}
+							</span>
+						)}
+				</div>
 				</div>
 				<div className="md:flex-row flex-col  gap-5 flex justify-between w-full items-center">
 					{showData && (
