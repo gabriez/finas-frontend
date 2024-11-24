@@ -10,12 +10,14 @@ import { toast } from "react-toastify";
 import { FINASAPI } from "../../lib/FinasApi";
 import { formatDate } from "../helpers/lib";
 import { ITEMS_PER_PAGE } from "../../constants";
-
-
+import { FaRegTrashAlt } from "react-icons/fa";
+import { useAuth } from "../../context/AuthProvider";
 
 const ProjectList = () => {
 	const [officials, setOfficials] = useState([]);
 	const [municipios, setMunicipios] = useState([]);
+	const { userData } = useAuth();
+
 	const [status, setStatus] = useState([]);
 	const [showModal, setShowModal] = useState(false);
 	const [loader, setLoader] = useState(false);
@@ -61,11 +63,11 @@ const ProjectList = () => {
 			try {
 				let [municipiosRes, encargadosRes, statesRes] = await Promise.all([
 					FINASAPI.getMunicipios(),
-					FINASAPI.getUsers("encargado"),
+					FINASAPI.getUsers("encargado", 0, 100),
 					FINASAPI.getStates(),
 				]);
 				if (municipiosRes.status) setMunicipios(municipiosRes.data);
-				if (encargadosRes.status) setOfficials(encargadosRes.data);
+				if (encargadosRes.status) setOfficials(encargadosRes.data.users);
 				if (statesRes.status) setStatus(statesRes.data);
 			} catch (error) {
 				console.log("error in initialRequest > ", error);
@@ -81,12 +83,14 @@ const ProjectList = () => {
 				<h1 className="text-white text-[26px] sm:text-[30px] lg:text-[34px] 2xl:text-[40px] font-bold font-['Poppins']">
 					Lista de Proyectos
 				</h1>
-				<ButtonAdd
-					classNameCustom={" w-[160px] sm:w-[244px] "}
-					icon={<LuFilePlus2 className="w-5 h-5 relative" />}
-					onClick={handleModalOpen}>
-					Registrar Proyecto
-				</ButtonAdd>
+				{userData.rol === "admin" && (
+					<ButtonAdd
+						classNameCustom={" w-[160px] sm:w-[244px] "}
+						icon={<LuFilePlus2 className="w-5 h-5 relative" />}
+						onClick={handleModalOpen}>
+						Registrar Proyecto
+					</ButtonAdd>
+				)}
 			</div>
 			<div className="overflow-x-auto 2xl:w-[1600px] w-[90vw] ">
 				<Table
@@ -103,17 +107,46 @@ const ProjectList = () => {
 									<td>{formatDate(project.lapsoInicio)}</td>
 									<td>{formatDate(project.lapsoFin)}</td>
 									<td>{project.status}</td>
-									<td className="flex items-center h-[100px] justify-center">
+									<td className="flex items-center h-[100px] justify-center px-4">
 										<ButtonAdd
 											onClick={() => {
 												setShowProject(project);
 												handleModalOpen();
 												setShowData(true);
 											}}
-											classNameCustom={" w-[161px] h-[59px]"}
+											classNameCustom={" w-[120px] py-2 mr-1"}
 											icon={<LuEye className="w-6 h-6" />}>
 											Ver Más
 										</ButtonAdd>
+										<button
+											type="button"
+											onClick={async () => {
+												if (project.status === "Finalizado") {
+													toast.error(
+														"No puedes borrar un proyecto finalizado"
+													);
+													return;
+												}
+												try {
+													let res = await FINASAPI.deleteProject(project.id);
+													if (res.status) {
+														toast.success("Eliminó el proyecto exitosamente");
+														setProjects((prevState) => {
+															let filtered = prevState.filter(
+																(proj) => proj.id != project.id
+															);
+															return filtered;
+														});
+													} else {
+														toast.error(res.message);
+													}
+												} catch (error) {
+													console.log("error in deleteProjects > ", error);
+													toast.error("Ocurrio un error, recarga la pagina");
+												}
+											}}>
+											<FaRegTrashAlt size={24} color="red" />
+										</button>
 									</td>
 								</tr>
 							))

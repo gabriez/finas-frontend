@@ -51,7 +51,7 @@ class CoreFinasAPI {
 		}
 	}
 
-	async getUsers(query, skip) {
+	async getUsers(query, skip, limit = ITEMS_PER_PAGE) {
 		const result = {
 			data: null,
 			message: "",
@@ -60,7 +60,7 @@ class CoreFinasAPI {
 
 		try {
 			const response = await httpClient.get({
-				url: `/users?rol=${query}&skip=${skip}&limit=${ITEMS_PER_PAGE}`,
+				url: `/users?rol=${query}&skip=${skip}&limit=${limit}`,
 			});
 
 			const data = response.data.data;
@@ -279,6 +279,32 @@ class CoreFinasAPI {
 		}
 	}
 
+	async deleteProject(id) {
+		const result = {
+			data: null,
+			message: "",
+			status: false,
+		};
+
+		try {
+			const response = await httpClient.deleteR({
+				url: `/projects/${id}`,
+			});
+
+			const data = response.data.data;
+			const status = response.data.status;
+			result.status = status;
+
+			result.message = response.data.message;
+
+			return result;
+		} catch (error) {
+			console.log("> error in deleteProject", error);
+
+			return handleError(error, result);
+		}
+	}
+
 	async getReport(id) {
 		const result = {
 			data: null,
@@ -287,13 +313,14 @@ class CoreFinasAPI {
 		};
 
 		try {
-			const response = await httpClient.get({
-				url: `/projects/report/${id}`,
-			},
-			{
-				responseType: "arraybuffer"
-			}
-		);
+			const response = await httpClient.get(
+				{
+					url: `/projects/report/${id}`,
+				},
+				{
+					responseType: "arraybuffer",
+				}
+			);
 
 			if (response.data.status != undefined) {
 				result.message = response.data.message;
