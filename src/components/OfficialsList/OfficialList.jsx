@@ -10,6 +10,7 @@ import Modal from "react-modal";
 import { FINASAPI } from "../../lib/FinasApi";
 import { toast } from "react-toastify";
 import OfficialModalForm from "./OfficialModalForm";
+import { ITEMS_PER_PAGE } from "../../constants";
 
 Modal.setAppElement("#root");
 
@@ -19,6 +20,9 @@ const OfficialList = () => {
 	const [loader, setLoader] = useState(false);
 	const [userEdit, setUserEdit] = useState({});
 	const [users, setUsers] = useState([]);
+	const [currentPage, setCurrentPage] = useState(1); // Track the current page
+	const [totalUsers, setTotalUsers] = useState(0);
+	const totalPages = Math.ceil(totalUsers / ITEMS_PER_PAGE); // Calculate total pages
 
 	const handleModalOpen = () => {
 		setShowModal(true);
@@ -32,17 +36,24 @@ const OfficialList = () => {
 		const getData = async () => {
 			try {
 				setLoader(true);
-				let result = await FINASAPI.getUsers("encargado");
-				setUsers(result.data);
-				setLoader(false);
+				const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+				let result = await FINASAPI.getUsers("encargado", offset);
+				if (result.status) {
+					setUsers(result.data.users);
+					setTotalUsers(result.data.count); // Set the total project count
+				} else {
+					toast.error(result.message);
+				}
 			} catch (error) {
-				setLoader(false);
 				console.log("error in UsersList > ", error);
 				toast.error("Ocurrio un error, recarga la pagina");
+			} finally {
+				setLoader(false);
 			}
 		};
 		getData();
-	}, []);
+	}, [currentPage]);
 
 	return (
 		<div className="text-white flex flex-col justify-center py-[12rem] items-center">
@@ -52,7 +63,9 @@ const OfficialList = () => {
 				</h1>
 				<ButtonAdd
 					classNameCustom={" w-[160px] lg:w-[200px] 2xl:w-[244px] "}
-					icon={<UserPlus className="w-6 h-6 lg:w-7 lg:h-7 2xl:w-10 2xl:h-10 relative" />}
+					icon={
+						<UserPlus className="w-6 h-6 lg:w-7 lg:h-7 2xl:w-10 2xl:h-10 relative" />
+					}
 					onClick={() => {
 						handleModalOpen();
 						setUserEdit({});
@@ -118,7 +131,11 @@ const OfficialList = () => {
 					</tr>
 				</Table>
 			</div>
-			{/* <Pagination /> */}
+			<Pagination
+				currentPage={currentPage}
+				totalPages={totalPages}
+				onPageChange={(page) => setCurrentPage(page)}
+			/>{" "}
 			<CustomModal
 				className="w-[85vw] md:w-[579px] h-[80vh] overflow-y-scroll bg-white rounded-[30px]  shadow overflow-hidden"
 				show={showModal}

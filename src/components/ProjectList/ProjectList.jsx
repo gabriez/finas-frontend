@@ -9,59 +9,9 @@ import ProjectModalForm from "./ProjectModalForm";
 import { toast } from "react-toastify";
 import { FINASAPI } from "../../lib/FinasApi";
 import { formatDate } from "../helpers/lib";
+import { ITEMS_PER_PAGE } from "../../constants";
 
-const projects = [
-	{
-		name: "The Sliding",
-		municipio: "ejemplo",
-		propuesta: "propuesta.",
-		startDate: "2024",
-		endDate: "2029",
-		status: "abierto",
-	},
-	{
-		name: "Witchy Woman",
-		municipio: "ejemplo",
-		propuesta: "propuesta.",
-		startDate: "2019",
-		endDate: "2029",
-		status: "abierto",
-	},
-	{
-		name: "Shining Star",
-		municipio: "ejemplo",
-		propuesta: "propuesta.",
-		startDate: "2019",
-		endDate: "2029",
-		status: "abierto",
-	},
-	{
-		name: "Shining Star",
-		municipio: "ejemplo",
-		propuesta: "propuesta.",
-		startDate: "2019",
-		endDate: "2029",
-		status: "abierto",
-	},
-];
 
-const dataMap = projects.map((project, index) => (
-	<tr key={index} className="w-[1600px] border-t-2 border-[#eeeeee]">
-		<td className="pl-20">{project.name}</td>
-		<td>{project.municipio}</td>
-		<td>{project.propuesta}</td>
-		<td>{project.startDate}</td>
-		<td>{project.endDate}</td>
-		<td>{project.status}</td>
-		<td className="flex items-center h-full justify-center">
-			<ButtonAdd
-				classNameCustom={" w-[161px] h-[59px]"}
-				icon={<LuEye className="w-6 h-6" />}>
-				Ver Más
-			</ButtonAdd>
-		</td>
-	</tr>
-));
 
 const ProjectList = () => {
 	const [officials, setOfficials] = useState([]);
@@ -72,6 +22,9 @@ const ProjectList = () => {
 	const [projects, setProjects] = useState([]);
 	const [showData, setShowData] = useState(false);
 	const [showProject, setShowProject] = useState({});
+	const [currentPage, setCurrentPage] = useState(1); // Track the current page
+	const [totalProjects, setTotalProjects] = useState(0);
+	const totalPages = Math.ceil(totalProjects / ITEMS_PER_PAGE); // Calculate total pages
 
 	const handleModalOpen = () => {
 		setShowModal(true);
@@ -87,9 +40,13 @@ const ProjectList = () => {
 		const getProjects = async () => {
 			try {
 				setLoader(true);
-				let result = await FINASAPI.getProjects();
-				if (result.status) setProjects(result.data);
-				else toast.error(result.message);
+				const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+				let result = await FINASAPI.getProjects(offset);
+				if (result.status) {
+					setProjects(result.data.projects);
+					setTotalProjects(result.data.count); // Set the total project count
+				} else toast.error(result.message);
 			} catch (error) {
 				console.log("error in getProjects > ", error);
 				toast.error("Ocurrio un error, recarga la pagina");
@@ -97,7 +54,7 @@ const ProjectList = () => {
 			setLoader(false);
 		};
 		getProjects();
-	}, []);
+	}, [currentPage]);
 
 	useEffect(() => {
 		const initialRequest = async () => {
@@ -179,7 +136,7 @@ const ProjectList = () => {
 						)
 					}>
 					<tr className="text-[#063a0a] font-semibold font-['Poppins'] border-b-2 border-[#063a0a] text-[16px] 2xl:text-xl bg-[#bdd8bf] ">
-					<th className="xl:pl-20 pl-14 py-6">Nombre</th>
+						<th className="xl:pl-20 pl-14 py-6">Nombre</th>
 						<th>Municipio</th>
 						<th>Propuesta</th>
 						<th>Fecha de Inicio</th>
@@ -189,7 +146,12 @@ const ProjectList = () => {
 					</tr>
 				</Table>
 			</div>
-			<Pagination />
+			<Pagination
+				currentPage={currentPage}
+				totalPages={totalPages}
+				onPageChange={(page) => setCurrentPage(page)}
+			/>
+
 			<CustomModal
 				className="w-[90%] md:w-[60%] lg:w-[50%] h-[90%] overflow-scroll overflow-x-hidden bg-white rounded-[30px] shadow "
 				show={showModal}

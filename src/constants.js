@@ -5,5 +5,6 @@ export const LOCAL_STORAGE_KEYS = {
 };
 
 export const URL_API = import.meta.env.VITE_URL_API || '';
+export const ITEMS_PER_PAGE = 10;
 
 export const TITLE = 'FINAS'

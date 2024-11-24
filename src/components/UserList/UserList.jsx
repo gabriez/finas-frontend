@@ -10,6 +10,7 @@ import { FINASAPI } from "../../lib/FinasApi";
 import { toast } from "react-toastify";
 import Modal from "react-modal";
 import UserModalForm from "./UserModalForm";
+import { ITEMS_PER_PAGE } from "../../constants";
 
 Modal.setAppElement("#root");
 
@@ -19,6 +20,9 @@ const UserList = () => {
   const [loader, setLoader] = useState(false);
   const [userEdit, setUserEdit] = useState({});
   const [users, setUsers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+	const [totalUsers, setTotalUsers] = useState(0);
+	const totalPages = Math.ceil(totalUsers / ITEMS_PER_PAGE); // Calculate total pages
 
   const handleModalOpen = () => {
     setShowModal(true);
@@ -32,17 +36,25 @@ const UserList = () => {
     const getData = async () => {
       try {
         setLoader(true);
-        let result = await FINASAPI.getUsers("all");
-        setUsers(result.data);
-        setLoader(false);
+				const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+        let result = await FINASAPI.getUsers("all", offset);
+        if (result.status) {
+					setUsers(result.data.users);
+					setTotalUsers(result.data.count); // Set the total project count
+				} else {
+					toast.error(result.message);
+				}        
       } catch (error) {
-        setLoader(false);
+        
         console.log("error in UsersList > ", error);
         toast.error("Ocurrio un error, recarga la pagina");
+      } finally {
+        setLoader(false);
       }
     };
     getData();
-  }, []);
+  }, [currentPage]);
 
   return (
     <div className="text-white flex flex-col items-center overflow-x-hidden py-10">
@@ -118,7 +130,11 @@ const UserList = () => {
           </tr>
         </Table>
       </div>
-      {/* <Pagination/> */}
+      <Pagination
+				currentPage={currentPage}
+				totalPages={totalPages}
+				onPageChange={(page) => setCurrentPage(page)}
+			/>
       <CustomModal
         className="w-[85vw] md:w-[579px] h-[87vh] bg-white rounded-[30px] shadow overflow-x-hidden"
         show={showModal}

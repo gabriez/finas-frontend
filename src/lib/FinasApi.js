@@ -1,3 +1,4 @@
+import { ITEMS_PER_PAGE } from "../constants";
 import httpClient from "./httpClient";
 
 function handleError(axiosError, result) {
@@ -50,7 +51,7 @@ class CoreFinasAPI {
 		}
 	}
 
-	async getUsers(query) {
+	async getUsers(query, skip) {
 		const result = {
 			data: null,
 			message: "",
@@ -59,7 +60,7 @@ class CoreFinasAPI {
 
 		try {
 			const response = await httpClient.get({
-				url: `/users?rol=${query}`,
+				url: `/users?rol=${query}&skip=${skip}&limit=${ITEMS_PER_PAGE}`,
 			});
 
 			const data = response.data.data;
@@ -180,7 +181,7 @@ class CoreFinasAPI {
 		}
 	}
 
-	async getProjects() {
+	async getProjects(offset) {
 		const result = {
 			data: null,
 			message: "",
@@ -189,7 +190,7 @@ class CoreFinasAPI {
 
 		try {
 			const response = await httpClient.get({
-				url: `/projects`,
+				url: `/projects?skip=${offset}&limit=${ITEMS_PER_PAGE}`,
 			});
 
 			const data = response.data.data;
