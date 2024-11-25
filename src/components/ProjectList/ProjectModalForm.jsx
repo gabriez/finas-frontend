@@ -5,6 +5,10 @@ import { useAuth } from "../../context/AuthProvider";
 import { formatInputDate } from "../helpers/lib";
 import * as Yup from "yup";
 
+function isValidDate(value) {
+	return !isNaN(new Date(value).getTime());
+}
+
 const schemaProject = Yup.object({
 	titulo: Yup.string()
 		.min(5, "Necesita como mínimo 5 carácteres")
@@ -26,10 +30,16 @@ const schemaProject = Yup.object({
 		.min(10, "Necesita como mínimo 10 carácteres")
 		.required("Es un campo requerido"),
 	coordenadasLat: Yup.string()
-		.min(5, "Necesita como mínimo 5 carácteres")
+		.matches(
+			/^-?([0-8]?[0-9]|90)(\.[0-9]{1,10})?$/,
+			"Debe ser una coordenada valida"
+		)
 		.required("Es un campo requerido"),
 	coordenadasLong: Yup.string()
-		.min(5, "Necesita como mínimo 5 carácteres")
+		.matches(
+			/^-?([0-9]{1,2}|1[0-7][0-9]|180)(\.[0-9]{1,10})?$/,
+			"Debe ser una coordenada valida"
+		)
 		.required("Es un campo requerido"),
 	anoAprob: Yup.number()
 		.typeError("Debe ser un número")
@@ -42,14 +52,33 @@ const schemaProject = Yup.object({
 	observacion: Yup.string()
 		.min(5, "Necesita como mínimo 5 carácteres")
 		.required("Es un campo requerido"),
-	lapsoInicio: Yup.string().required("Es un campo requerido"),
-	lapsoFin: Yup.string().required("Es un campo requerido"),
+	lapsoInicio: Yup.date()
+		.transform((value, originalValue) =>
+			{console.log(isValidDate(originalValue) ? value :new Date(2009, 0))
+				return isValidDate(originalValue) ? value :new Date(2009, 0)}
+		)
+		.min(new Date(2010, 0), "No es una fecha válida") // Triggered when the value is not a valid date
+		.required("Es un campo requerido") // Triggered when the field is empty
+,	lapsoFin: Yup.date()
+    .transform((value, originalValue) => 
+		isValidDate(originalValue) ? value : new Date(2009, 0) // Transform invalid values to null
+	  )
+	  .min(new Date(2010, 0), "No es una fecha válida") // Catch non-date values
+	  .required("Es un campo requerido") // Ensure the field is required
+		.when("lapsoInicio", (lapsoInicio, schema) => {
+			if (lapsoInicio) {
+				return schema.typeError("Debe ser una fecha valida").required("Es un campo requerido").min(
+					lapsoInicio,
+					"El lapso final debe ser mayor que el lapso de inicio"
+				);
+			}
+
+			return schema;
+		}),
 	ente: Yup.string()
 		.min(2, "Necesita como mínimo 2 carácteres")
 		.required("Es un campo requerido"),
 });
-
-const schemaEditProject = schemaProject;
 
 const ProjectModalForm = ({
 	showData = false,
@@ -126,12 +155,13 @@ const ProjectModalForm = ({
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const schema = showData ? schemaEditProject : schemaProject;
-			await schema.validate(
+			await schemaProject.validate(
 				{
 					...formData,
 					encargadoId: parseInt(formData.encargadoId),
 					anoAprob: parseInt(formData.anoAprob),
+					lapsoInicio: new Date(formData.lapsoInicio),
+					lapsoFin: new Date(formData.lapsoFin),
 				},
 				{
 					abortEarly: false,
@@ -139,6 +169,7 @@ const ProjectModalForm = ({
 			);
 			setErrors({});
 		} catch (err) {
+			console.log(err);
 			const validationErrors = {};
 			err.inner.forEach((error) => {
 				if (error.path && !validationErrors[error.path]) {
@@ -445,9 +476,9 @@ const ProjectModalForm = ({
 								<option value="">Cargando...</option>
 							)}
 						</select>
-						{errors?.comunidad?.length > 0 && (
+						{errors?.sector?.length > 0 && (
 							<span className="block w-[100%] bg-red-500 text-white text-md py-1 px-2 rounded-md">
-								{errors.comunidad}
+								{errors.sector}
 							</span>
 						)}
 					</div>
